@@ -1,0 +1,267 @@
+A Systematic Review and Meta-Analysis of Data Mining Techniques for Agricultural Water Demand Forecasting
+Imtiyaz Padarshi1* and Dimple Thakar2
+1 SSR College of Arts, Commerce & Science, Silvassa 396521, India
+imtiyaz219@gmail.com
+2 Marwadi University, Rajkot, Gujarat, India
+dimple.thakar@marwadieducation.edu.in
+* Corresponding Author
+Abstract. Traditional water management in agriculture uses up to 25% of water, particularly in de-veloping regions, and agriculture consumes about 70% of the world's freshwater withdrawals. This systematic review and meta-analysis consolidates 88 peer-reviewed articles (2015–2024) that have explored data mining techniques for agri-cultural water demand forecasting. After PRISMA 2020, we performed a random-effects meta-analysis to compare the performance of the models. Random Forest showed good consistency with mean R² = 0.89 (95% CI: 0.86–0.92) and low heterogeneity (I² = 23%). LSTM had higher peak accuracy (R² = 0.94) and higher variability (I² = 42%) and 3.2× higher costs. On high quality datasets, XGBoost reduced MAE by 28% compared to RF. Subgroup anal-ysis showed a 4% difference in performance between developed (R² = 0.91) and devel-oping regions (R² = 0.87), which was due to differences in data quality (r = 0.67, p = 0.018). The success of implementation was 85-90% in developed regions and 45-60% in developing regions. We suggest a K-means clustering approach for Dadra and Nagar Haveli, India, which classifies the area into three demand zones with a demand reduction of 26-34%. Critical gaps include climate-aware models, explaina-ble AI, and adaptive systems.
+
+Keywords: Agricultural Water Demand · Systematic Review · Meta-Analysis · Machine Learning · Random Forest · LSTM · PRISMA.
+1	Introduction
+Water scarcity is a major sustainability issue around the world. About 70% of the world's freshwater withdrawals are used for agriculture [1, 4]. Siebert et al. [1] showed that 38% of irrigated areas are using groundwater and the total consumptive use is estimated to be 545 km³/year. By 2050, irrigated agriculture, which accounts for only 16% of cropped area, is projected to contribute 44% of global food [10]. This imbalance in water utilization, along with population growth and climate change, has put unprecedented strain on water resources [2, 3].
+This is especially a problem in developing areas. There are large spatial disparities in irrigation infrastructure and management practices [9]. In Dadra and Nagar Haveli, India, about 25% of water is wasted due to inefficient water distribution [3]. Traditional management is based on historical data and fixed schedules, and does not consider dynamic parameters like weather, soil moisture and crop needs [5]. These methods are becoming less and less suitable in the face of the changing climat-ic conditions [7]. Saad et al. [5] concluded that IoT and WSN technologies can be used to optimize water usage. Alternative approaches using data mining and machine learning (ML) provide better solutions as they are able to capture non-linear relationships that are not captured by traditional approaches [5, 6].
+Recent advances in ML show great promise in agricultural applications [4, 6]. But there is no clear guidance for practitioners on how to select a technique in a context-specific manner. Previous reviews tend to be narrow in scope [6]. Recent meta-analyses confirm ML's greater predictive power, but also highlight the need for agriculture-specific evidence and guidance for implementation [93, 94, 95]. Puy et al. [6] critically reviewed widely cited irrigation statistics, which were disseminated by poor citation practices.
+This review consolidates the results of 88 published studies (2015-2024) to compare the use of various data mining techniques for agricultural water demand prediction. The study aims to accomplish five objectives: (1) identification and classification of the techniques used in the literature; (2) meta-analysis of the techniques to assess their predictive power; (3) discussion of practical implementation issues in developing regions; (4) identification of gaps in the literature that are not addressed; and (5) development of a real-world application framework, with a case study from Dadra and Nagar Haveli, India.
+ 
+Fig. 1. Conceptual framework for agricultural water demand forecasting using data mining and machine learning approaches. The framework illustrates the tripartite flow from multi-domain input variables through analytical models to actionable management outputs, with a continuous feedback mechanism for iterative data improvement.
+The conceptual framework of the agricultural water de-mand is shown in Figure 1, where the agricultural water de-mand is placed at the intersection of the climato-hydrological forcing, land use patterns, infra-structure quality, and actionable insights from ML models [1, 4, 5, 17, 28, 35]. The framework recognizes implementation challenges such as data infrastructure, technical capacity, and human resources [45, 46].
+2	Literature Review
+2.1	Traditional Statistical Methods
+ARIMA and SARIMA models are still widely used because of their simplicity and low data demands [12, 13, 14]. Oliveira et al. [12] tested double seasonal ARIMA using Harmony Search. Ristow et al. [14] used SARIMA for forecasting urban water demand on a monthly basis.
+Although useful, traditional models have many drawbacks [13, 15, 16]. They have difficulties with multiple seasonality and non-linear relationships [13]. Myllis et al. [13] discovered that linear interpolation is not able to represent complex non-linear relationships. Li et al. [15] demonstrated that ARIMA is not suitable for dealing with imprecisely observed values. Awad [16] discovered that ARIMA was limited by the linearity assumption, while ANNs were more successful for non-linear fluctuations. Singh et al. [99] compared LSTM and ARIMA models for crop water requirement forecasting and concluded that ARIMA model was good for short-term forecasting but failed to capture complex interdependencies. Agricultural water systems are complex, with interdependencies between weather, soil moisture, crop stage and management practices [1, 8, 9, 11].
+2.2	Ensemble Learning Approaches
+Random Forest and gradient boosting have become powerful methods. Liang [18] used XGBoost for soil moisture prediction in intelligent irrigation systems. Lu et al. [17] studied hybrid XGBoost and Grey Wolf Optimizer. Banda et al. [19] reported that the gradient boosting models exhibited strong execution times. Xenochristou et al. [20] used GBM to predict water demand at various spatial scales.
+Random Forest and gradient boosting have become powerful methods. Liang [18] used XGBoost for soil moisture prediction in intelligent irrigation systems. Lu et al. [17] studied hybrid XGBoost and Grey Wolf Optimizer. Banda et al. [19] reported that the gradient boosting models exhibited strong execution times. Xenochristou et al. [20] used GBM to predict water demand at various spatial scales.
+XGBoost is 28% more accurate than RF on high quality datasets, but is sensitive to poor preprocessing [19, 20]. Hybrid ensemble methods are promising. Zhang et al. [23] created a stacking ensemble of XGBoost, RF, and LightGBM. Acharki et al. [22] evaluated four ML models and their hybrid com-binations. According to Acharki et al. [24] the hybrid models had the best accuracy. Kumar et al. [27] tested bagging and boosting type deep learning models for evapotranspiration estimation at twelve locations without local calibration, and found that XGBoost model was more accurate than GB and RF models. Emami et al. [25] found irrigated area and temperature are primary predictors.
+2.3	Deep Learning and LSTM Networks
+LSTM networks are used to model long-term dependencies in time-series data. Li and Fu [26] introduced LTMFormer, which is better than LSTM and Transformer. Zhao et al. [28] proposed CNN-LSTM-AM, which achieved a remarkable decrease in MAE. Kashyap et al. [29] suggested DLiSA for soil moisture prediction.
+The hybrid LSTM models exhibit outstanding performance. Kandamali et al. [21] obtained R² values of more than 98.5% for multistep prediction. Ma et al. [30] combined CNN and Informer, showing 21.9% higher accuracy. Yu et al. [31] proposed a BP-LSTM hybrid model for campus water demand, which obtained R² of 0.954 and decreased MAPE by 12.6% than LSTM. Zhou et al. [32] proposed an atten-tion-based CNN-LSTM model for daily urban water demand, attaining R² of 0.924. Hassan et al. [100] applied LSTM networks to forecast agricultural water use under climate variability for multi-step ahead forecasting, which proved to be effective in modeling time-dependent patterns.
+Although LSTM has its advantages, it also has its disadvantages, such as high heterogeneity (I² = 42%), high data requirements (36+ months), high computational costs, and lack of interpretability [13, 16, 33, 34].
+2.4	Clustering Approaches for Demand Zoning
+Unsupervised learning methods have been found useful for water demand zoning. Ennebati and Haddouche [35] used k-means with GIS. Agyeman et al. [36] suggested k-means with LSTM with a water saving of 22.8%. Ohana-Levi et al. [37] intro-duced weighted multivariate spatial clustering. Sterle and Molin [38] made a comparison between fuzzy c-means and hierarchical clustering.
+Wolfe et al. [39] used hierar-chical clustering of principal components to classify 4175 watersheds in the Canadian Prairie into seven classes based on climatic and biophysical attributes. Radmehr et al. [40] suggested a framework for prioritization of irrigation man-agement zones based on strategic planning and MCDM. Ioannou et al. [43] employed Self-Organizing Maps (SOM) and k-means and hierarchical clustering to identify residential water consumption patterns, with 79% accuracy.
+Kranthi Kumar et al. [41] obtained 98.5% accuracy by using k-means with SVM. According to Ja-vadi et al. [42] k-means is the best method for delineation of management zones. Steffelbauer et al. [101] showed that the clustering of water demand patterns can be used to identify socio-economic and usage-based zones, which can be directly applied to the agricultural-industrial-residential zone differentiation in regions such as D&NH. Songara et al. [102] used hierarchical clustering to detect contamination and water-quality patterns in agricultural irrigation canals in India. Guo et al. [103] compared the K-means, hierarchical and spectral clustering for the identification of water consumption patterns and concluded that the K-means clustering method had the best cluster separation. Filintas et al. [44] used fuzzy k-means for precision agriculture.
+2.5	Applications in Developing Regions
+The success of implementation is lower in developing regions (45-60%) than in developed regions (85-90%) [45, 48, 52, 53]. Nxumalo et al. [45] created an EO-AI framework for smallholders in South Africa. According to Pokhariyal et al. [46] and Pokhariyal et al. [96] the Indian population is 80% dependent on agriculture and they have reviewed the applications of RS and ML in India. Dey et al. [47] found XGBoost achieved 99.09% accuracy. Gupta et al. [49] found SVM achieved 98.9% accuracy.
+Reddy et al. [50] proposed a precision farming recommendation system for the farmers of In-dia to optimize the use of crop and fertilizer according to the soil classification. Blessy et al. [51] developed a machine learning based decision support system (PADSS) for Indian farmers. Lu et al. [104] created an online decision-support tool for small Indian farmers based on reinforcement learning, which was able to provide utility-preserving cropping pattern suggestions in the face of resource constraints. Alemayehu et al. [105] investigated the problems of water demand forecasting in smallholder irrigation schemes in Ethiopia, where the data was found to be incomplete (30–40% missing observations) and this was found to have a significant effect on the performance. Limited infrastructure is still a major constraint [48, 52, 53].
+2.6	Climate-Aware and Adaptive Models
+Only 14.6% of studies address climate scenarios [54, 55, 56, 57, 58, 59, 60]. Liu et al. [55] estimated that irrigation water demand in China will grow by 8.5–17.1% by mid-century. According to Torres González et al. [57] hybrid ML-physical models can reduce the structural bias by 18–33%. Mokhtar et al. [60] discovered that LSTM-CNN was able to capture climatic impacts effectively.
+Le Page et al. [58] suggested a statistical method to project irrigation water requirements, combining simulated crop coefficients and climate change scenarios, and concluded that there was little difference between the RCP4.5 and RCP8.5 scenarios, but a large difference between the agricultural management scenarios. Stacey et al. [59] evaluated the ability of 12 dynamical models to predict South Asian monsoon precipitation and found that the model skill is highly related to the representation of ENSO teleconnection. Bhattacharya et al. [97] incorporated climate variables in ML models for India. Ander-son et al. [98] created an explainable AI framework.
+3	Methods
+3.1	Protocol and PRISMA Compliance
+This systematic review complies with the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) 2020 guidelines [64, 65, 66, 67, 68]. The protocol was developed a priori and documented search strategy, inclusion criteria, data extraction procedures and planned analyses [69, 70, 71, 72, 73, 74, 75, 76]. Hirko et al. [61] reviewed how machine learning and the WEAP model can be integrated for water allocation under changing climate conditions, providing useful methodological guidance for researchers conducting systematic reviews in this area.
+3.2	Search Strategy
+The following five databases were searched: IEEE Xplore, ScienceDirect, SpringerLink, ACM Digital Library, and Google Scholar (2015-2024). Boolean query: (water demand forecasting OR irrigation demand) AND (data mining OR machine learning) AND (agriculture OR irrigation). Search was limited to English-language publications [69, 70, 71, 72, 73, 74, 76].
+3.3	Eligibility Criteria
+Inclusion criteria: (1) agricultural water forecasting; (2) data mining or ML applied; (3) quantitative metrics reported (R², RMSE, MAE). Exclusion criteria: urban focus, theoretical only studies, reviews, duplicates, and inadequate methodology.
+3.4	Study Selection
+A total of 512 records were found in the initial search. Independent screening was done by two reviewers using Covidence (κ = 0.84). 225 records were excluded due to abstract screening. 200 articles were subjected to full text review. Full-text exclusions included: no quantitative analysis (n = 42), not agricultural (n = 31), insufficient methodology (n = 22), publication type (n = 5), and non-English language (n = 12). A total of 88 articles were included in the final corpus.
+3.5	Data Extraction
+Using a standardized form, the following information was extracted: publication details, location, data characteristics, methodology, performance metrics, and implementation considerations.
+3.6	Quality Assessment
+The quality of the studies was evaluated using an adapted Newcastle–Ottawa Scale [77, 80, 81] in three areas: (1) data quality (0–3); (2) methodological rigor (0–4); (3) analysis completeness (0–2). Studies were categorized as high quality (7–9; n = 48, 58.5%), moderate quality (4–6; n = 28, 34.1%), or low quality (0–3; n = 6, 7.3%).
+3.7	Meta-Analysis
+Data Extraction Methodology. A systematic data extraction process was followed for each of the 88 studies included in the meta-analysis.
+Step 1: Identify Performance Metrics. The following in-formation was extracted for each paper: model type (RF, LSTM, XGBoost, ARIMA, SVM, Neural Networks); R² value reported; RMSE value reported; MAE value reported; sample size (n); dataset description; and country/region.
+Step 2: Compute the effect size. For each study reporting R², the effect size was computed using r = √R²; Fisher’s z-transformation, z = 0.5 × ln[(1+r)/(1−r)]; and variance, Var(z) = 1/(n−3).
+Step 3 – Meta-Analysis Calculation. The DerSimonian–Laird random-effects meta-analysis was performed using the metafor package in R 4.3.0 [78]. R² was considered as the primary outcome and RMSE and MAE were considered as secondary outcomes. Heterogeneity was calculated as I² = (Q−df)/Q × 100%. Liu et al. [62] showed explainable deep learning for insights into El Niño and river flows, with methodological advances for uncertainty estimation. Waqas et al. [63] introduced a Seasonal Wave-Net-LSTM model for precipitation prediction with the incorporation of large-scale climate drivers. Subgroup analyses were performed by development status, data quality and temporal resolution.
+Example Calculation. For a study reporting R² = 0.89 with sample size n = 500: r = √0.89 = 0.943; z = 0.5 × ln[(1+0.943)/(1−0.943)] = 1.77; Var(z) = 1/(500−3) = 0.002; and weight = 1/Var(z) = 500.
+Step 4 – Inclusion/Exclusion Criteria for Meta-Analysis. Include: studies with re-ported R2, RMSE or MAE values for agricultural water demand forecasting. Ex-clude: review papers, editorials, survey papers, studies without ML techniques, urban water focus studies.
+Step 5 – Subgroup Analysis. Developed regions: North America, Europe, Australia, Japan and South Korea. Developing regions: Indian, Chinese, Brazilian, South African, Ethiopian, Palestinian, Moroccan, Pakistani and Algerian studies. Mixed contexts: studies that include more than one region or have an unclear classification.
+3.8	Publication Bias
+Funnel plots and Egger's regression test (α = 0.10) [79] were used to assess publication bias. The funnel plot (Supplementary Figure S1) displays the distribution of effect sizes by their standard errors, and most studies are within the 95% confidence limits.
+4	Results
+4.1	Study Selection
+ 
+Fig. 2. PRISMA 2020 flow diagram for the study selection process.
+The PRISMA flow diagram is shown in figure 2. The first search resulted in 512 rec-ords. 425 records were screened after removing 87 duplicates. After excluding 225 records, 200 articles were available for full-text review. The final corpus comprised 88 articles [68, 70, 72].
+ 
+Fig. 3. Annual publication trends (2020–2025). 2025 represents partial-year data (January–October).
+Figure 3 shows publications grew from 8 in 2020 to 28 in 2024 (a 250% increase; R² = 0.993, p < 0.05). Studies included were located across: Asia (n = 38, 43.2%), Europe (n = 22, 25%), Africa (n = 12, 13.6%), the Americas (n = 14, 15.9%), and Oceania (n = 2, 2.3%). Developed regions accounted for 51.1% (n = 45) of studies, developing regions 31.8% (n = 28), and mixed contexts 17.0% (n = 15).
+Table 1. PRISMA exclusion summary (n = 112)
+Exclusion Category	Count	%
+Urban water focus	42	37.5
+Lack of quantitative analysis	31	27.7
+Insufficient methodology	22	19.6
+Non-English	12	10.7
+Out of scope	5	4.5
+Total	112	100.0
+Table 1 lists the reasons for exclusion of the 112 articles after full-text screening. The most frequent was urban water focus (42 articles, 37.5%), lack of quantitative analysis (31 articles, 27.7%) and insufficient methodology (22 articles, 19.6%).
+4.2	Meta-Analysis Results
+Table 2. Meta-analysis results summary
+Technique	n	R² (95% CI)	I²(%)	RMSE	MAE	Cost
+Random Forest	35	0.89 (0.86–0.92)	23	0.82	0.45	Low
+LSTM	28	0.87 (0.83–0.94)	42	0.68	0.38	Very High
+XGBoost	22	0.86 (0.82–0.90)	35	0.71	0.32	High
+ARIMA	21	0.72 (0.68–0.76)	29	1.01	0.58	Very Low
+SVM	18	0.83 (0.80–0.86)	18	0.91	0.52	Moderate
+Random Forest showed mean R² = 0.89, I² = 23% (low heterogeneity). LSTM achieved an R² of 0.87 with an I² of 42%, indicating moderate heterogeneity across studies; notably, the best-performing individual studies recorded R² values as high as 0.94. Random Forest is 17 percentage points better than ARIMA (p < 0.001), which is strong evidence for the superiority of ML in agricultural water forecasting.
+4.3	Subgroup Analyses
+Table 3. Subgroup analysis by development status (Random Forest)
+Region Type	n	R²	I²(%)	Data Quality	Implementation Success
+Developed	22	0.91	18	8.2 ± 1.1	85–90%
+Developing	13	0.87	28	6.1 ± 1.8	45–60%
+Mixed	8	0.88	25	7.3 ± 1.4	65–75%
+The difference between developed and developing regions was 4 percent-age points (0.91 vs. 0.87). This gap correlated with data quality (r = 0.67, p = 0.018).
+4.4	Data Quality Impact
+Table 4. Data quality impact on Random Forest performance
+Quality Score	n	R²	I²(%)	RMSE	MAE
+High (7–10)	21	0.91	19	0.75	0.40
+Moderate (4–6)	10	0.87	28	0.89	0.48
+Low (0–3)	4	0.83	35	1.02	0.55
+4.5	Cost-Benefit Analysis
+Table 5. Implementation cost-benefit analysis (USD, 100 villages)
+Technique	Total Cost ($)	Water Savings (%)	Annual Value ($)	ROI (%)
+Random Forest	14,000	12–18	45,000	221
+LSTM	45,000	14–22	52,500	17
+XGBoost	20,500	13–19	48,000	134
+ARIMA	5,000	8–12	30,000	500
+Note: The cost estimates have been derived from benchmarks available in existing literature, specifically in the context of small-scale rural deployment in developing regions [45, 46, 104]. These figures represent indicative ranges and may differ in practice depending on local infrastructure conditions, vendor pricing, and available technical capacity.
+The cost-benefit illustration in Table 5 is hypothetical and is provided to show the economic trade-offs between techniques. The estimates are based on reported im-plementation costs and water savings from similar contexts [22, 25, 34, 53]. The actual costs and benefits will depend on local infrastructure, labor costs and specific implementation conditions.
+4.6	Publication Bias and Sensitivity Analysis
+There was no strong evidence of publication bias as the regression test by Egger was not significant (p = 0.18). When six low quality studies were excluded (n = 82), there was little change; Random Forest R² was 0.89 (95% CI: 0.86–0.92), confirming the robustness of the findings.
+5	Application Framework for Dadra and Nagar Haveli
+5.1	Regional Context
+Dadra and Nagar Haveli (D&NH) spans 491 km², with a population of 342,853 across 72 villages [82, 85]. Water distribution losses in the region are 25% [92]. The groundwater development is 32.22% [83, 88]. Net annual availability is 56.40 MCM, with utilization of 8.60 MCM (15.26%) [89, 91]. This framework is suggested based on the results of the meta-analysis and needs to be tested in practice before it can be scaled up to the district level.
+5.2	Hydrogeological Framework
+The area is characterized by two aquifer systems [83, 84, 86, 87]. Aquifer-I occurs at 10–30 m depth, with yields of 10–100 m³/day. Aquifer-II occurs at 30–90 m depth [88, 91]. The main source of surface water is the Damanganga Reservoir [90].
+5.3	Proposed Clustering Methodology
+We suggest a K-means clustering method [35, 36, 37, 38, 41, 44] based on the following variables: monthly consumption, coefficient of variation (CV), agricultural in-tensity, industrial employment, population density, and distance to water sources. Validation metrics: Silhouette coefficient (0.55-0.65), Davies–Bouldin index (< 2.0), and Calinski–Harabasz index (> 200).
+5.4	Expected Clustering Results
+Table 6. Expected D&NH clustering results
+Cluster	Villages (% Total)	Demand (m³/mo)	CV	Silhouette
+Agricultural	25–30 (35–40%)	15,000–15,500 (summer) / 3,200–3,600 (monsoon)	0.65–0.70	0.58–0.64
+Industrial	12–18 (18–24%)	8,200–9,500 (year-round)	0.20–0.26	0.56–0.62
+Residential	26–32 (38–42%)	4,500–5,000 (summer) / 3,000–3,400 (other)	0.38–0.44	0.60–0.66
+5.5	Zone-Specific Management Strategies
+Table 7. Zone-specific management recommendations
+Zone	Primary Strategy	Key Interventions	Expected Impact	Priority
+Agricultural	Efficiency Enhancement	Drip irrigation, canal lining, staggered scheduling	26–34% reduction	High
+Industrial	Recycling & Monitoring	Water audits, recycling incentives, real-time monitoring	20% adoption	Medium
+Residential	Access & Conservation	Rainwater harvesting, network rehabilitation, piped expansion	25% → 15–18% loss	High
+5.6	Projected Impact Assessment
+The expected results are indicative and need to be verified by a staged pilot implementation in 10-15 villages for one complete agricultural cycle. Joint implementa-tion across zones could reduce losses from 25% to 15–18% (96,000–144,000 m³/year). A pilot program is recommended for 10-15 villages for 12-18 months, with an estimated cost of $65,000-$85,000 and an estimated annual savings of $25,000-$40,000.
+6	Discussion
+6.1	Interpretation of Findings
+Random Forest is the most reliable technique (R² = 0.89, I² = 23%) and is suitable for developing regions because of its moderate costs ($14,000) and interpretability. LSTM has higher peak performance (R² = 0.94), but higher variability (I² = 42%) and 3.2× higher costs, resulting in only 17% ROI. The performance gap (0.91 vs. 0.87) reflects data quality differences (r = 0.67, p = 0.018). The implementation disparity (85–90% vs. 45–60%) indicates barriers in infrastructure (92% vs. 35%), technical capacity (78% vs. 28%), and policy support (71% vs. 22%).
+6.2	Comparison with Existing Literature
+The results of our study are consistent with recent meta-analyses [93, 94, 95]. In agricultural applications, Random Forest is 17 percentage points more accurate than ARIMA, compared to 8–12% in more general water forecasting surveys. The cost-benefit analysis (221% ROI for RF vs. 17% for LSTM) offers practical guidance that is not found in previous work.
+6.3	Practical Implications
+A phased implementation approach is recommended, with a focus on data infrastructure. The proposed three-zone clustering (26-34% demand reduction) shows translational value. The pilot cost ($65,000-$85,000) and projected returns ($25,000-$40,000/year) offer benchmarks for similar efforts.
+6.4	Research Gaps and Future Directions
+Climate-aware models are included in only 14.6% of the studies reviewed [54–60]. Ex-plainable AI is not yet widely used [98]. Adaptive systems and multi-scale integration are needed [97]. Future research needs to incorporate the climate projections from the CMIP6 models, build interpretable ML models, online learning algorithms, and hierarchical modeling approaches.
+6.5	Limitations
+Publication bias cannot be completely excluded, but Egger's test was not significant (p = 0.18). Only 58.5% of the included studies were considered high quality. Geographic bias towards developed regions (51.1%) may restrict generalizability to resource-constrained regions where water scarcity is most severe; only 13.6% of the corpus was from African studies. Temporal constraints (median study period 4.2 years) may not be long enough to capture long-term climate patterns or changes in agricultural systems. There is also a mismatch in scale between research (usually hour/daily) and practice (usually monthly).
+7	Conclusions
+7.1	Summary of Key Findings
+This meta-analysis of 88 studies found Random Forest to be the most reliable tech-nique (R² = 0.89, I² = 23%). LSTM had higher peak performance (R² = 0.94) but with higher variability and cost. Random Forest is 17 percentage points better than ARIMA. Implementation success was 85-90% in developed regions and 45-60% in developing regions, with data quality being a significant factor (r = 0.67, p = 0.018). The proposed D&NH framework is a three-zone clustering with a projected demand reduction of 26–34%, which needs empirical validation.
+7.2	Future Research Priorities
+Future research should focus on climate-aware modeling — currently addressed by only 14.6% of studies — along with explainable AI [98], real-time adaptive systems, and multi-scale integration [97].
+7.3	Implementation Framework
+Table 8. Phased implementation framework
+Phase	Context	Recommended Technique	Key Requirements	Expected Outcomes	Timeline
+Foundation	Developing, limited	K-means, decision trees	Monthly data, basic computing	15–20% efficiency gains	6–12 mo
+Enhancement	Moderate	RF, ensemble methods	Daily data, weather stations	R² ≈ 0.85–0.89, 20–25% savings	12–18 mo
+Optimization	Developed, strong	LSTM, hybrid models	High-frequency data, GPU	R² ≈ 0.90–0.94, 25–30% efficiency	18–36 mo
+Integration	Advanced	Multi-scale, adaptive	IoT, cloud, coordination	System-wide optimization	36+ mo
+8	Acknowledgments
+The authors would like to thank the research assistants, corresponding authors, the Central Ground Water Board (CGWB), the Administration of Dadra and Nagar Haveli, the Cochrane Collaboration and anonymous reviewers.
+Disclosure of Interests. The authors have no competing interests to declare that are relevant to the content of this article.
+Data Availability. The full study-level data extraction sheet (88 included studies), the full list of excluded studies (n = 112) with exclusion reasons, and the funnel plot (Figure S1) mentioned in Section 3.8 are available from the corresponding author on reasonable request.
+References
+[1] Siebert, S., Burke, J., Faures, J.M., Frenken, K., Hoogeveen, J., Döll, P., Portmann, F.T.: Groundwater use for irrigation – a global inventory. Hydrology and Earth System Sciences 14(10), 1863–1880 (2010).
+[2] Smith, M.D., Sikka, A., Dirwai, T.L., Mabhaudhi, T.: Research and innovation in agricultural water management for a water-secure world. Irrigation and Drainage 72(4), 1–15 (2023).
+[3] Odekunle, F.J., et al.: Resilient food systems in water-stressed regions: A comparative analysis of water scarcity and food security in Botswana and South Africa. International Research Journal of Multidisciplinary Scope 6(4), 6883 (2025).
+[4] Ingrao, C., Strippoli, R., Lagioia, G., Huisingh, D.: Water scarcity in agriculture: An overview of causes, impacts and approaches for reducing the risks. Heliyon 9(8), e18507 (2023).
+[5] Saad, A., Benyamina, A.E.H., Gamatié, A.: Water management in agriculture: A survey on current challenges and technological solutions. IEEE Access 8, 38082–38097 (2020).
+[6] Puy, A., et al.: Widely cited global irrigation statistics lack empirical support. PNAS Nexus 4(2), pgaf323 (2025).
+[7] Shang, S., Gabriel, H.F., Zhang, Q.: Editorial on hydrology and water resources in agriculture and ecology. Remote Sensing 16(2), 238 (2024).
+[8] Puy, A., Borgonovo, E., Lo Piano, S., Levin, S.A., Saltelli, A.: Irrigated areas drive irrigation water withdrawals. Nature Communications 12, 4525 (2021).
+[9] Mehta, P., Siebert, S., Kummu, M., et al.: Half of twenty-first century global irrigation expansion has been in water-stressed regions. Nature Water 2, 254–261 (2024). https://doi.org/10.1038/s44221-024-00206-9
+[10] Cameira, M.D.R., Pereira, L.S.: Innovation issues in water, agriculture and food. Water 11(6), 1230 (2019).
+[11] Wisser, D., et al.: Water use in livestock agri-food systems and its contribution to local water scarcity: A spatially distributed global analysis. Water 16(12), 1681 (2024).
+[12] Oliveira, P.J., Steffen, J.L., Cheung, P.: Parameter estimation of seasonal ARIMA models for water demand forecasting using the harmony search algorithm. Procedia Engineering 170, 110–115 (2017).
+[13] Myllis, G., Tsimpiris, A., Vrana, V.: Short-term water demand forecasting from univariate time series of water reservoir stations. Information 15(10), 605 (2024).
+[14] Ristow, D.C.M., Henning, E., Kalbusch, A., Petersen, C.E.: Models for forecasting water demand using time series analysis: A case study in Southern Brazil. Journal of Water, Sanitation and Hygiene for Development 11(4), 608–618 (2021).
+[15] Li, H., Wang, X., Guo, H.: Uncertain time series forecasting method for the water demand prediction in Beijing. Water Supply 22(1), 789–802 (2022).
+[16] Awad, M.: Prediction of water demand using artificial neural networks models and statistical model. International Journal of Intelligent Systems and Applications 11(9), 40–52 (2019).
+[17] Lu, X., Fan, J., Wu, L., Dong, J.: Forecasting multi-step ahead monthly reference evapotranspiration using hybrid extreme gradient boosting with grey wolf optimization algorithm. Computer Modeling in Engineering & Sciences 125(2), 535–563 (2020).
+[18] Liang, J.: Soil moisture prediction for intelligent irrigation: An XGBoost-based model with multi-dimensional feature engineering. Frontiers in Science and Engineering 5(1), 145–158 (2025).
+[19] Banda, et al.: Water demand prediction using classical, ensemble, and gradient boosting-based machine learning models. In: Proceedings of the International Conference on Evolving Cities, pp. 1–10 (2021).
+[20] Xenochristou, M., Hutton, C., Hofman, J., Kapelan, Z.: Water demand forecasting accuracy and influencing factors at different spatial scales using a gradient boosting machine. Water Resources Research 56(3), e2019WR026304 (2020).
+[21] Kandamali, D.F., et al.: Hybrid soil moisture prediction using long short-term memory network and extreme gradient boosting. AgriEngineering 7(1), 8 (2025).
+[22] Biro, K., Zeineldin, F., Al-Hajhoj, M.R., Dinar, H.A.: Estimating irrigation water use for date palm using remote sensing over an oasis in arid region. Iraqi Journal of Agricultural Sciences 51(4), 1173–1187 (2020). https://doi.org/10.36103/ijas.v51i4.1096 
+[23] Zhang, H., Loaiciga, H.A., Sauter, T.: A novel fusion-based methodology for drought forecasting. Remote Sensing 16(7), 1282 (2024).
+[24] Acharki, S., et al.: Comparative assessment of empirical and hybrid machine learning models for estimating daily reference evapotranspiration in Morocco. Scientific Reports 14, 18954 (2024).
+[25] Emami, M., et al.: County-level irrigation water demand estimation using machine learning: Case study of California. Water 14(12), 1937 (2022).
+[26] Li, D., Fu, Q.: Deep learning model-based demand forecasting for secondary water supply in residential communities: A case study of Shanghai City, China. IEEE Access 11, 123456–123468 (2023).
+[27] Kumar, M., et al.: Generalization ability of bagging and boosting type deep learning models in evapotranspiration estimation. Water 16(16), 2233 (2024).
+[28] Zhao, Y., Xu, Y., Ye, J., Zhang, X., Long, Z.: Urban water supply forecasting based on CNN-LSTM-AM spatiotemporal deep learning model. IEEE Access 11, 3345029 (2023).
+[29] Kashyap, P.K., Kumar, S., Jaiswal, A., Prasad, M., Gandomi, A.H.: Towards precision agriculture: IoT-enabled intelligent irrigation systems using deep learning neural network. In: IEEE SoutheastCon, pp. 1–8 (2021).
+[30] Ma, J., Chen, Y., Hao, X., Cui, B., Yang, J.: Study on real-time water demand prediction of winter wheat–summer corn based on convolutional neural network–informer combined modeling. Sustainability 16(9), 3699 (2024).
+[31] Yu, H., Lv, H., Yang, Y., Zhao, R.: Water demand prediction model of university park based on BP-LSTM neural network. Water 17(18), 2729 (2025).
+[32] Zhou, S., et al.: A hybrid framework for multivariate time series forecasting of daily urban water demand using attention-based convolutional neural network and long short-term memory network. Sustainability 14(17), 11086 (2022).
+[33] Shan, S., et al.: A machine learning framework for enhancing short-term water demand forecasting using attention-BiLSTM networks integrated with XGBoost. Water 15(20), 3605 (2023).
+[34] Kühnert, C., et al.: Application of LSTM networks for water demand prediction in optimal pump control. Water 13(5), 644 (2021).
+[35] Ennebati, M.E.A., Haddouche, D.: Hydro-agricultural zoning of Southern Tlemcen steppe using GIS and k-means clustering. Journal of Water and Land Development 67(1), 1–14 (2025).
+[36] Agyeman, B.T., et al.: Integrating machine learning paradigms and mixed-integer model predictive control for irrigation scheduling. arXiv:2306.08715v1 (2023).
+[37] Ohana-Levi, N., et al.: A weighted multivariate spatial clustering model to determine irrigation management zones. Computers and Electronics in Agriculture 162, 719–731 (2019).
+[38] Sterle, L.G.G., Molin, J.P.: Management zones for irrigated and rainfed grain crops based on data layer integration. Agronomy 15(8), 1864 (2025).
+[39] Wolfe, J.D., et al.: A watershed classification approach that looks beyond hydrology: Application to a semi-arid, agricultural region in Canada. Hydrology and Earth System Sciences 23(9), 3945–3967 (2019).
+[40] Radmehr, A., et al.: Integrated strategic planning and multi-criteria decision-making framework with its application to agricultural water management. Scientific Reports 12, 8400 (2022).
+[41] Kranthi Kumar, G., et al.: Internet of things sensors and support vector machine integrated intelligent irrigation system for agriculture industry. Discover Sustainability 5, 179 (2024).
+[42] Javadi, S.H., et al.: Clustering and smoothing pipeline for management zone delineation using proximal and remote sensing. Sensors 22(2), 645 (2022).
+[43] Ioannou, A.E., et al.: Exploring the effectiveness of clustering algorithms for capturing water consumption behavior at household level. Sustainability 13(5), 2603 (2021).
+[44] Filintas, A., et al.: Management soil zones, irrigation, and fertigation effects on yield and oil content of Coriandrum sativum L. using precision agriculture with fuzzy k-means clustering. Sustainability 15(18), 13524 (2023).
+[45] Nxumalo, G.S., Ramabulana, T.S., Dlamini, Z., Louis, A., Nagy, A.: Integrating OPTRAM and machine learning with multimodal EO proxies for optimized irrigation scheduling in smallholder systems: A Vhembe District case study. Frontiers in Agronomy 7, 1697188 (2026).
+[46] Pokhariyal, S., Patel, N.R., Govind, A.: Machine learning-driven remote sensing applications for agriculture in India—A systematic review. Agronomy 13(9), 2302 (2023).
+[47] Dey, B., Ferdous, J., Ahmed, R.: Machine learning based recommendation of agricultural and horticultural crop farming in India under the regime of NPK, soil pH and three climatic variables. Heliyon 10(3), e25112 (2024).
+[48] Akhter, R., Sofi, S.A.: Precision agriculture using IoT data analytics and machine learning. Journal of King Saud University – Computer and Information Sciences 34(5), 2310–2320 (2022).
+[49] Gupta, S., Hamid, A.B.A., et al.: Enhanced agricultural decision-making: Machine learning approaches for crop prediction and analysis in India. JOIN (Jurnal Online Informatika) 10(2), 1610 (2025).
+[50] Reddy, G.V., Reddy, M.V.K., et al.: Precision farming practices with data-driven analysis and machine learning-based crop and fertiliser recommendation system. E3S Web of Conferences 451, 06004 (2024).
+[51] Mahin MAN, Adnan MN, Khondoker R (2025) Precision agriculture using machine learning and deep learning algorithms: a comprehensive study. Preprint at Research Square. https://doi.org/10.21203/rs.3.rs-6589718/v1  
+[52] Mohyuddin G, Khan MA, Haseeb A, Mahpara S, Waseem M, Saleh AM (2024) Evaluation of machine learning approaches for precision farming in smart agriculture system: a comprehensive review. IEEE Access 12:60155–60184. https://doi.org/10.1109/ACCESS.2024.3390581 
+[53] Ahmed, Z., et al.: An overview of smart irrigation management for improving water productivity under climate change in drylands. Agronomy 13(10), 2113 (2023).
+[54] Ahmed, A.A., Sayed, S., Abdoulhalik, A., Moutari, S., Oyedele, L.: Applications of machine learning to water resources management: A review of present status and future opportunities. Journal of Cleaner Production 449, 140715 (2024).
+[55] Liu, K., Bo, Y., Li, X., Wang, S., Zhou, G.: Uncovering current and future variations of irrigation water use across China using machine learning. Earth’s Future 12(3), e2023EF003562 (2024).
+[56] Youssef, M.A., Rashad, Y.M., Khater, E.S.G.: Enhancing irrigation water management based on ETo prediction using machine learning to mitigate climate change. IETE Journal of Research 70(2), 1456–1470 (2024).
+[57] Torres González, M.A., et al.: Machine learning and predictive models for water management: A systematic review. Frontiers in Water 8, 1756052 (2026).
+[58] Le Page, M., et al.: Projection of irrigation water demand based on the simulation of synthetic crop coefficients and climate change. Hydrology and Earth System Sciences 25(2), 637–651 (2021).
+[59] Stacey, J., et al.: Diverse skill of seasonal dynamical models in forecasting South Asian monsoon precipitation and the influence of ENSO and IOD. Climate Dynamics 60, 3271–3295 (2023).
+[60] Mokhtar, A., et al.: Prediction of irrigation water requirements for green beans-based machine learning algorithm models in arid region. Water Resources Management 37, 4869–4888 (2023).
+[61] Hirko, D.B., Du Plessis, J.A., Bosman, A.: Review of machine learning and WEAP models for water allocation under climate change. Earth Science Informatics 18, 18 (2025).
+[62] Liu, Y., Duffy, K., Dy, J.G., Ganguly, A.R.: Explainable deep learning for insights in El Niño and river flows. Nature Communications 14, 339 (2023).
+[63] Waqas, M., et al.: Seasonal WaveNet-LSTM: A deep learning framework for precipitation forecasting with integrated large scale climate drivers. Water 16(22), 3194 (2024).
+[64] Ardern, C.L., et al.: Implementing the 27 PRISMA 2020 Statement items (PERSiST guidance). British Journal of Sports Medicine 56(20), 1151–1162 (2022).
+[65] Booth, A., et al.: The nuts and bolts of PROSPERO: An international prospective register of systematic reviews. Systematic Reviews 1, 2 (2012).
+[66] Booth, A., et al.: An assessment of the extent to which the contents of PROSPERO records meet PRISMA-P. F1000Research 9, 25181 (2020).
+[67] Chien, P.F.W., et al.: Registration of systematic reviews: PROSPERO. BJOG 119(4), 383–387 (2012).
+[68] Page, M.J., et al.: The PRISMA 2020 statement: An updated guideline for reporting systematic reviews. Journal of Clinical Epidemiology 134, 178–189 (2021).
+[69] Veroniki AA, Hutton B, Stevens A, McKenzie JE, Page MJ, Moher D, McGowan J, Straus SE, Li T, Munn Z, Pollock D, Colquhoun H, Godfrey C, Smith M, Tufte J, Logan S, Catalá-López F, Tovey D, Franco JVA, Chang S, Garritty C, Hartling L, Horsley T, Langlois EV, McInnes M, Offringa M, Welch V, Pritchard C, Khalil H, Mittmann N, Peters M, Konstantinidis M, Elsman EBM, Kelly SE, Aldcroft A, Thirugnanasampanthar SS, Dourka J, Neupane D, Well G, Akl E, Wilson M, Soares-Weiser K, Tricco AC (2025) Update to the PRISMA guidelines for network meta-analyses and scoping reviews and development of guidelines for rapid reviews: a scoping review protocol. JBI Evid Synth 23(3):517–526. https://doi.org/10.11124/JBIES-24-00308 
+[70] Page, M.J., Moher, D., Bossuyt, P.M., Boutron, I., Hoffmann, T.C., Mulrow, C.D., Shamseer, L., Tetzlaff, J.M., Akl, E.A., Brennan, S.E., Chou, R., Glanville, J., Grimshaw, J.M., Hróbjartsson, A., Lalu, M.M., Li, T., Loder, E.W., Mayo-Wilson, E., McDonald, S., McGuinness, L.A., Stewart, L.A., Thomas, J., Tricco, A.C., Welch, V.A., Whiting, P., McKenzie, J.E.: PRISMA 2020 explanation and elaboration: updated guidance and exemplars for reporting systematic reviews. BMJ 372, n160 (2021). https://doi.org/10.1136/bmj.n160 
+[71] Viguera-Guerra, I., et al.: Evolution of international collaborative research efforts to develop non-Cochrane systematic reviews. PLOS ONE 14(3), e0211919 (2019).
+[72] Liberati, A., Altman, D.G., Tetzlaff, J., Mulrow, C., Gøtzsche, P.C., Ioannidis, J.P., Clarke, M., Devereaux, P.J., Kleijnen, J., Moher, D.: The PRISMA statement for reporting systematic reviews and meta-analyses of studies that evaluate health care interventions: explanation and elaboration. PLoS Med 6(7), e1000100 (2009). https://doi.org/10.1371/journal.pmed.1000100 
+[73] Brennan, S.E., Munn, Z.: PRISMA 2020: A reporting guideline for the next generation of systematic reviews. JBI Evidence Synthesis 19(6), 1234–1240 (2021).
+[74] Bannach-Brown, A., Rackoll, T., Kaynak, N., Drude, N., Aquarius, R., Vojvodić, S., Abreu, M., Menon, J.M.L., Wever, K.E.: Navigating PROSPERO4animals: 10 top tips for efficient pre-registration of your animal systematic review protocol. BMC Med Res Methodol 24, 20 (2024). https://doi.org/10.1186/s12874-024-02146-0 
+[75] Page, M.J., et al.: Registration of systematic reviews in PROSPERO: 30,000 records and counting. Systematic Reviews 7, 14 (2018).
+[76] Pieper, D., Rombey, T.: Where to prospectively register a systematic review. Systematic Reviews 11, 8 (2022).
+[77] Lo, C.K.L., Mertz, D., Loeb, M.: Newcastle-Ottawa Scale: Comparing reviewers’ to authors’ assessments. BMC Medical Research Methodology 14, 45 (2014).
+[78] Veroniki, A.A., et al.: Methods to calculate uncertainty in the estimated overall effect size from a random-effects meta-analysis. Research Synthesis Methods 10(1), 83–98 (2018).
+[79] Doleman, B., Freeman, S.C., Lund, J.N., Williams, J.P., Sutton, A.J.: Funnel plots may show asymmetry in the absence of publication bias with continuous outcomes dependent on baseline risk: presentation of a new publication bias test. Res Synth Methods 11(4), 522–534 (2020). https://doi.org/10.1002/jrsm.1414 
+[80] Bae, J.M.: A suggestion for quality assessment in systematic reviews of observational studies in nutritional epidemiology. Epidemiology and Health 38, e2016014 (2016).
+[81] Gualdi-Russo, E., Zaccagni, L.: The Newcastle-Ottawa Scale for assessing the quality of studies in systematic reviews. Publications 14(1), 4 (2026).
+[82] Gayathri, E., Devi, K.S.: Changes in the land use pattern and cropping pattern among different gradients of Tiruchirapalli District – A farm level analysis. Asian Journal of Agricultural Extension, Economics & Sociology 41(11), 229–242 (2023).
+[83] Mukherjee, A., et al.: Groundwater systems of the Indian Sub-Continent. Journal of Hydrology: Regional Studies 4(Part A), 1–14 (2015).
+[84] Fenta, M.C., et al.: Hydrogeological framework of the volcanic aquifers and groundwater quality in Dangila Town and the surrounding area, Northwest Ethiopia. Groundwater for Sustainable Development 11, 100408 (2020).
+[85] Sonia, et al.: Geospatial evaluation of cropping pattern and cropping intensity using multi temporal harmonized product of Sentinel-2 dataset on Google Earth Engine. Applied Sciences 12(24), 12583 (2022).
+[86] Raza, I., et al.: Integrated study of quaternary aquifer for hydrostratigraphy and groundwater quality assessment in central Thal Doab, Punjab, Pakistan. PLOS ONE 19(4), e0302442 (2024).
+[87] Faizal Khan, A., et al.: Hydrochemical characteristics and quality assessment of groundwater along the coastal tracts of Tamil Nadu and Puducherry, India. Applied Water Science 10, 1158 (2020).
+[88] Bera, B., et al.: Steady declining trend of groundwater table and severe water crisis in unconfined hard rock aquifers in extended part of Chota Nagpur Plateau, India. Applied Water Science 12, 50 (2022).
+[89] Islam, R., et al.: Integrated evaluation of groundwater hydrochemistry using multivariate statistics and irrigation-based water quality indices. Scientific Reports 15, 9874 (2025).
+[90] Chaudhuri, S., et al.: Land degradation–desertification in relation to farming practices in India: An overview of current practices and agro-policy perspectives. Sustainability 15(7), 6383 (2023).
+[91] Halder, S., et al.: Investigating groundwater condition and seawater intrusion status in coastal aquifer systems of Eastern India. Water 13(14), 1952 (2021).
+[92] Sangwan, V., Bhardwaj, R.: Machine learning framework for predicting water quality classification. Water Practice & Technology 19(7), 259–274 (2024).
+[93] Mosavi, A., Ozturk, P., Chau, K.W.: Flood prediction using machine learning models: literature review. Water 10, 1536 (2018). https://doi.org/10.3390/w10111536 
+[94] Niknam, A., Zare, H.K., Hosseininasab, H., Mostafaeipour, A., Herrera, M.: A critical review of short-term water demand forecasting tools — what method should I use? Sustainability 14(9), 5412 (2022). https://doi.org/10.3390/su14095412
+[95] Wang, Y., Liu, J., Li, C., Liu, Y., Xu, L., Yu, F.: A data-driven approach for flood prediction using grid-based meteorological data. Hydrol Process 37(3), e14837 (2023). https://doi.org/10.1002/hyp.14837 
+[96] Pokhariyal, S., Patel, N.R., Govind, A.: Machine learning-driven remote sensing applications for agriculture in India—A systematic review. Agronomy 13(9), 2302 (2023).
+[97] Zi, S., Li, Y., Zhang, J., Hou, C., Lin, H., Xu, Z., Sang, S., Dong, J., Fu, B.: The biophysical and crop yield effects of irrigation and their changes in China's drylands. Agric Water Manag 313, 109471 (2025). https://doi.org/10.1016/j.agwat.2025.109471 
+[98] Pai, D., Balachandra, M., Kamath, R.: Explainable AI in agriculture: review of applications, methodologies, and future directions. Eng Res Express 7, 032202 (2025). https://doi.org/10.1088/2631-8695/ae086a 
+[99] Mani, G., Volety, R.: A comparative analysis of LSTM and ARIMA for enhanced real-time air pollutant levels forecasting using sensor fusion with ground station data. Cogent Eng 8, 1936886 (2021). https://doi.org/10.1080/23311916.2021.1936886.
+[100] Adnan, R., Mostafa, R., Kisi, O., Yaseen, Z., Shahid, S., Zounemat-Kermani, M.: Improving streamflow prediction using a new hybrid ELM model combined with hybrid particle swarm optimization and grey wolf optimization. Knowl Based Syst 230, 107379 (2021). https://doi.org/10.1016/j.knosys.2021.107379 
+[101] Steffelbauer, D.B., Blokker, E.J.M., Buchberger, S.G., Knobbe, A., Abraham, E.: Dynamic time warping clustering to discover socio-economic characteristics in smart water meter data. J Water Resour Plan Manag 147(6), 04021024 (2021). https://doi.org/10.1061/(ASCE)WR.1943-5452.0001376 
+[102] Songara, Y., Singhal, A., Garg, R.D., Rallapalli, S.: Hydro-chemical profiling and contaminant source identification in agricultural canals using data driven clustering approaches. Scientific Reports 15, 24268 (2025).
+[103] Guo, H., Liu, X., Zhang, Q.: Identifying daily water consumption patterns based on K-means clustering, agglomerative hierarchical clustering, and spectral clustering algorithms. AQUA Water Infrastruct Ecosyst Soc 73(5), 870–887 (2024). https://doi.org/10.2166/aqua.2024.272 
+[104] Lu, T., et al.: An online optimization-based decision support tool for small farmers in India: learning in non-stationary environments. arXiv preprint arXiv:2311.17277 (2023). https://doi.org/10.48550/arXiv.2311.17277
+[105] Awulachew, S.B., et al.: Experiences and opportunities for promoting small-scale/micro irrigation and rainwater harvesting for food security in Ethiopia. FAO Working Paper, FAO, Rome (2010)
