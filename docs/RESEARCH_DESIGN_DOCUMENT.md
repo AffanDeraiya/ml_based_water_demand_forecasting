@@ -1,239 +1,57 @@
-# Research Design Document — Version 1
+# Research Design Document — DNH Residential Water-Demand Forecasting
 
-## 1. Document purpose and status
+## 1. Study purpose
 
-This document defines the research and experiment design for the first implementation of the DNH water-demand forecasting project. It translates the research paper, DAC-1 presentation, and agreed project decisions into an implementation-ready specification.
+Develop a reproducible machine-learning pipeline to forecast **combined monthly residential water demand for Dadra and Nagar Haveli (DNH)**. The project uses realistic synthetic data first, then permits replacement by confirmed real history without redesigning the pipeline.
 
-**Status:** Version 1 working design. The items labelled as working assumptions must be reviewed when the real-data source and schema are confirmed.
+## 2. Confirmed design decisions
 
-## 2. Research context
+- Spatial unit: one DNH-total series (`area_id = DNH_total`), not zones or villages.
+- Target: `residential_water_demand_m3`, measured in cubic metres per month.
+- Forecast horizons: next-month forecasts and quarterly demand calculated as the sum of three sequential monthly forecasts.
+- Main inputs: monthly weather, demographics, reservoir level, canal discharge, groundwater level, and lagged historical demand.
+- Scope: residential demand only. Agricultural data and groundwater-quality variables are excluded.
+- Data stage: the supplied workbook is a sample schema, so Phase 3 produces 15 years of reproducible monthly synthetic data.
+- Technology: open-source Python tooling; no dashboard is required. Deliverables are code, datasets, validation, model-comparison outputs, plots, and a concise report if required.
 
-The project is motivated by the need for more informed water-resource planning in Dadra and Nagar Haveli (DNH). The related systematic review/meta-analysis provides the academic justification for applying data-mining and machine-learning techniques to water-demand forecasting. The DAC-1 presentation identifies the intended workflow: data collection, preprocessing, Random Forest/LSTM/ANN model development, and evaluation.
+The canonical fields and quality rules are defined in [DATA_CONTRACT.md](DATA_CONTRACT.md).
 
-Although the source research discusses agricultural water demand and smart irrigation, the approved implementation scope for this project is **residential water-demand forecasting only**. The research framing should not be expanded to agricultural, industrial, crop-specific, or farm-level forecasting without an explicit scope decision.
+## 3. Research questions
 
-## 3. Objective
+1. Can weather, demographic, operational water-system, and lagged-demand data forecast DNH-total monthly residential water demand better than a seasonal-naive baseline?
+2. How do baseline, Random Forest, ANN, and LSTM models compare under an identical chronological evaluation protocol?
+3. Which predictors and seasonal patterns most influence forecasts?
+4. Can K-Means reveal interpretable **monthly demand regimes** (for example, monsoon/high-demand, dry-season, or transition months) without being treated as geographic clustering?
 
-Develop and evaluate a reproducible machine-learning pipeline that forecasts monthly residential water demand in DNH using historical demand/consumption, rainfall, population, calendar/seasonal information, and area-wide water usage where available.
+## 4. Forecasting design
 
-The system is intended as academic research and planning-oriented decision support. It should help identify expected high- and low-demand periods; it does not autonomously make water-allocation decisions.
+The modelling target is monthly demand for month *t*. Forecast features must be restricted to data available at the forecast origin. This typically includes lags of demand and operational variables, calendar features, and known/forecast weather inputs. It must never use observed demand or other unavailable values from the target month.
 
-## 4. Research questions
+The default synthetic-data split will be chronological: 10 years training, 2 years validation, and 3 years test. It may be adjusted only with a recorded reason if a future real dataset has a different usable length. Feature transformations, tuning, and model selection use only training and validation periods; the test period remains untouched until final evaluation.
 
-1. Can machine-learning models improve monthly residential water-demand forecasting compared with a seasonal-naive benchmark?
-2. How do Random Forest, ANN, and LSTM compare in predictive accuracy, stability, interpretability, and computational cost?
-3. Can K-Means clustering provide an interpretable demand-zone or demand-regime analysis that supports the forecasting study?
-4. Can quarterly residential demand be obtained reliably by aggregating three monthly forecasts?
+Quarterly output is generated recursively/sequence-wise by forecasting three monthly values and summing them. This maintains the same target definition and avoids pretending quarterly observations are available.
 
-## 5. Confirmed scope decisions
+## 5. Synthetic-data realism requirements
 
-| Topic | Decision |
-| --- | --- |
-| Sector | Residential demand only |
-| Primary target frequency | Monthly |
-| Forecast horizons | Monthly and quarterly |
-| Quarterly Version 1 method | Sum three sequential monthly forecasts |
-| Required models | Random Forest, ANN, LSTM |
-| Required baseline | Seasonal-naive forecast |
-| Data-mining component | K-Means clustering, with an interpretable purpose |
-| Expected initial variables | Monthly rainfall, water consumption, population, and area-wide water usage if available |
-| Evaluation design | Chronological time-series validation; no random train/test split |
-| Deliverables | Reproducible pipeline, comparison results, plots, and concise report; no dashboard/web application |
-| Technology constraints | Open-source tools; no current language, library, hardware, or GPU constraint |
+The synthetic generator must create plausible relationships without making the target trivially recoverable:
 
-## 6. Version 1 working assumptions
+- Monsoon-driven rainfall, humidity, sunshine, solar radiation, temperature, and wind patterns.
+- Smooth growth in population, urban population, and households.
+- Demand affected by population/households, climate/seasonality, prior demand, and random shocks.
+- Reservoir and groundwater levels that respond gradually to rainfall and demand/use.
+- Canal discharge that varies by season and supply-system conditions.
+- All demand values in m³/month at the DNH-total level.
 
-### 6.1 Spatial grain
+Exact relationships, files, tests, and acceptance criteria are in [PHASE_3_SYNTHETIC_DATA_GENERATION.md](PHASE_3_SYNTHETIC_DATA_GENERATION.md).
 
-**Assumption:** Synthetic data will contain one record per month for each of several representative DNH demand zones/areas. A DNH-total series will be generated by aggregation.
+## 6. Models and evaluation (later phases)
 
-**Reason:** This gives K-Means a meaningful role in grouping areas with similar historical demand behaviour and allows both zone-level and aggregate analysis.
+At minimum, compare a seasonal-naive baseline with Random Forest, ANN, and LSTM. Report MAE, RMSE, sMAPE, and R² where meaningful. “Accuracy” should not be presented as a generic classification-style percentage for a continuous-demand forecast. Synthetic-data metrics demonstrate the pipeline only; claims about practical DNH forecasting performance require a sufficient real historical holdout period.
 
-**Revision path:** If real data is available only as one DNH-wide monthly series, the production/research pipeline will forecast the DNH total directly. K-Means will then be used only as exploratory demand-regime analysis unless later spatial data becomes available.
+K-Means is retained because the research framing includes data mining, but it is a supplementary, leakage-safe exploratory analysis of monthly demand regimes. It must not be described as clustering DNH geographical zones.
 
-### 6.2 Target definition and unit
+## 7. Real-data replacement protocol
 
-**Assumption:** The prediction target is `residential_water_demand_m3`, estimated residential water demand in cubic metres per month.
+When actual historical data becomes available, retain the canonical schema and document all aggregation choices. Confirm that hourly or location-level demand is residential before summing it to a DNH-total monthly target. Reassess `m³` versus litres only as a unit conversion/presentation requirement. Do not make unsupported claims if real history is not long enough for the selected validation design.
 
-`water_consumption_m3` is treated as a distinct measurement and potential input feature, not a duplicate target. The model may use historical/lagged consumption but must not use same-period or future consumption to predict the target period.
-
-**Revision path:** Confirm the official measurement unit and the exact business/administrative definition of demand and consumption when real data is obtained.
-
-### 6.3 Synthetic data period
-
-**Assumption:** Generate 15 years of monthly synthetic data.
-
-**Reason:** It supplies sufficient annual seasonal cycles for lag features, chronological train/validation/test splits, and LSTM experiments while no real-data coverage has been confirmed.
-
-**Revision path:** Adjust the dataset and model design to the real-data history once its period and completeness are known.
-
-## 7. Forecast definition
-
-### 7.1 Monthly forecasting
-
-The core task is one-step-ahead forecasting:
-
-```text
-Information available through month t
-                ↓
-Predict residential demand for month t + 1
-```
-
-Forecast inputs may contain only information known at the forecast origin. Features derived from the future target month are prohibited.
-
-### 7.2 Quarterly forecasting
-
-Version 1 quarterly demand is calculated as the sum of three monthly forecasts generated from one forecast origin:
-
-```text
-Forecast month 1 + forecast month 2 + forecast month 3
-                       ↓
-              quarterly forecast
-```
-
-A separately trained quarterly model is outside Version 1 and may be introduced later as a controlled comparison experiment.
-
-For an operational three-month-ahead quarterly forecast, month two and month three must be forecast **recursively**. A predicted demand value is used where a later demand-lag feature is required. Only calendar features and separately documented future-known values or projections, such as an approved population estimate, may be used for later months. Actual future rainfall, consumption, usage, and demand are prohibited during quarterly backtesting.
-
-## 8. Data design
-
-### 8.1 Initial canonical schema
-
-```text
-date
-area_id
-rainfall_mm
-population
-water_consumption_m3
-area_water_usage_m3
-residential_water_demand_m3
-```
-
-`area_id` is a synthetic zone/area identifier in Version 1. The DNH-total series is an aggregation of areas.
-
-### 8.2 Synthetic-data requirements
-
-The synthetic generator must be reproducible and encode plausible relationships:
-
-- annual monsoon rainfall seasonality;
-- gradual population growth;
-- a long-term residential-demand trend;
-- zone-specific demand profiles;
-- lagged demand and historical consumption effects;
-- realistic noise;
-- optional, controlled missing values or anomalies to test validation and preprocessing.
-
-Every generated dataset must record its random seed, version, generation parameters, and assumptions. Synthetic results demonstrate pipeline behaviour only; they are not evidence of real-world forecasting accuracy for DNH.
-
-The generator configuration must define documented, adjustable plausible ranges for rainfall, population, demand, annual growth, zone variation, noise, and any controlled anomalies. Values are not hard-coded in this design document so they can be calibrated or replaced when real data becomes available.
-
-## 9. Data validation, preprocessing, and leakage control
-
-The pipeline must validate the schema, data types, units, date continuity, duplicates, missing values, and plausible ranges before modelling.
-
-Preprocessing will include chronological sorting, appropriate missing-value handling, training-only scaling/normalisation where needed, and clearly logged transformations.
-
-### Leakage-control rules
-
-- Features must be known at the forecast origin.
-- Lagged values of demand, consumption, rainfall, and area-wide usage are allowed.
-- Same-period or future consumption/usage is not allowed when forecasting that target period.
-- Scaling and imputation parameters are fitted on training data only.
-- Random splits are prohibited.
-
-## 10. Feature engineering
-
-Candidate features will be tested through a documented feature set:
-
-- demand lags: 1, 3, and 12 months;
-- rainfall and consumption lags;
-- rolling demand and rainfall averages;
-- month and quarter;
-- cyclical month encoding using sine and cosine transformations;
-- population level and growth/trend features;
-- K-Means-derived information only where it is stable, interpretable, and non-leaking.
-
-The final selected feature set must be recorded per experiment.
-
-## 11. K-Means design
-
-For synthetic zone-level data, K-Means will group zones using historical characteristics rather than individual target-period observations. Candidate clustering variables include average demand, peak demand, demand variability, rainfall sensitivity, and population growth.
-
-K-Means must be fitted using the training period only. Cluster-selection metrics, such as silhouette score, and all clustering variables must also be calculated from training data only. The resulting zone assignments are then frozen for validation and test evaluation. The project will not add an arbitrary cluster ID to a forecasting model without testing whether it improves performance fairly.
-
-If future real data has only a DNH-total series, K-Means will be retained as exploratory demand-regime analysis rather than claimed as spatial zoning.
-
-## 12. Models and comparison protocol
-
-### 12.1 Baseline
-
-A seasonal-naive baseline is required: predict a month using demand from the equivalent month in the prior year. An optional moving-average or trend baseline may be added.
-
-### 12.2 Forecasting models
-
-- **Random Forest:** tabular machine-learning model using engineered features.
-- **ANN:** feed-forward neural network using an aligned tabular feature set.
-- **LSTM:** sequence model using historical time windows.
-
-All models will forecast the same target dates and will receive only information available at each forecast origin. Hyperparameters will be chosen using the validation period, not the final test period.
-
-Version 1 uses a pooled/global modelling approach across the five synthetic zones. Each zone remains a separate chronological series; rows or sequence windows from all zones are pooled for training. Tabular models receive an encoded `area_id` or stable zone characteristics, while LSTM windows never cross zone boundaries. Overall and per-zone evaluation results are both required. Separate per-zone model training is a later experiment, not a Version 1 requirement.
-
-XGBoost is a potential future enhancement and is not part of the Version 1 mandatory comparison.
-
-## 13. Evaluation design
-
-Data will be split in chronological order:
-
-```text
-Past ----------------------------------------------------------> Future
-Training period | Validation period | Final untouched test period
-```
-
-For the default 15-year synthetic dataset, use years 1–10 for training, years 11–12 for validation, and years 13–15 as the final untouched test period. Any changed split must preserve chronological order and be recorded in the experiment configuration.
-
-Walk-forward validation may be added if it is feasible after the initial split-based experiments are complete.
-
-### Metrics
-
-- **Primary:** MAE and RMSE.
-- **Secondary:** sMAPE or MAPE, and R-squared where meaningful.
-
-### Required outputs
-
-- model-comparison table;
-- actual-versus-predicted plots;
-- residual/error plots;
-- performance by seasonal period, particularly monsoon versus non-monsoon months;
-- recorded training/inference cost and experiment configuration;
-- quarterly forecast evaluation based on aggregated monthly predictions.
-
-The preferred model is selected based on accuracy, stability, interpretability, computational cost, and deployability. It must improve upon the seasonal-naive benchmark on the final test period to support a claim of practical modelling value.
-
-## 14. Explainability and reporting
-
-The final reporting workflow will include feature importance for Random Forest and may include permutation importance or SHAP when appropriate. Results will be framed as forecast-based planning support, including expected demand, historical context, and stated limitations.
-
-The Version 1 deliverable consists of reproducible source code, data/configuration documentation, trained-model artefacts where relevant, comparison metrics, plots, and a concise report. A dashboard or web application is not required.
-
-## 15. Risks and limitations
-
-- Synthetic data cannot demonstrate actual DNH forecasting accuracy.
-- The official target definition and unit remain unverified.
-- Real-data availability, source, quality, coverage, and spatial grain are unconfirmed.
-- K-Means interpretation depends strongly on the availability of area-level data.
-- LSTM performance may be limited if eventual real history is short or sparse.
-
-These limitations must appear in the final report and be revisited during real-data integration.
-
-## 16. Remaining confirmation requests
-
-The following questions are not blockers for Version 1 implementation, but their answers will determine how the synthetic design is replaced or adapted for real DNH data:
-
-1. What is the real-data spatial level: DNH total, or individual zones/wards/villages?
-2. What is the official target unit and how are residential demand and water consumption defined and distinguished?
-3. What real data source, fields, and historical period can the team obtain?
-
-## 17. Approval criterion for Phase 1
-
-Phase 1 is complete when this document is accepted as the Version 1 design and the three remaining confirmation requests have been shared with the team. Implementation may proceed using the documented working assumptions while awaiting responses.
+## 8. Limitations and assumptions

@@ -1,331 +1,206 @@
-# Phase 3 Implementation Brief — Synthetic Data Generation
+# Phase 3 Implementation Brief — Synthetic DNH-Total Monthly Data (Version 2)
 
-## 1. Purpose and scope
+## 1. Mission
 
-Implement the Version 1 synthetic-data generator for the DNH residential water-demand forecasting project.
+Implement a deterministic, validated synthetic-data generator for **combined Dadra and Nagar Haveli (DNH) monthly residential water demand**. This brief is self-contained: a new agent should be able to implement Phase 3 without relying on older zone-level work.
 
-The generator must produce realistic, reproducible **monthly zone-level residential water-demand data** that conforms exactly to `DATA_CONTRACT.md`. It validates the downstream pipeline design while real DNH data is unavailable. It must never be presented as real DNH observations or evidence of real-world forecast accuracy.
+The generator must create a plausible 15-year (180 month) dataset at a single spatial level. It exists to demonstrate and test the subsequent forecasting pipeline until real history is available. It is not a claim that these are observed DNH measurements.
 
-This task ends after synthetic-data generation, validation, metadata, and tests are complete. Do **not** implement preprocessing, feature engineering, K-Means, forecasting models, dashboards, or reporting in this phase.
+## 2. Fixed decisions and boundaries
 
-## 2. Governing documents
+- Geography: one series only; every row has `area_id = "DNH_total"`.
+- Time grain: monthly; `date` is the first calendar day of each month.
+- Default history: `2010-01-01` through `2024-12-01`, inclusive (180 rows). Make dates configurable.
+- Target: `residential_water_demand_m3` in m³/month.
+- Scope: residential demand only. Do not create villages, zones, wards, `pateload`, hour-level observations, agriculture features, groundwater quality, consumption, or area-wide-usage columns.
+- Exclude `net_annual_groundwater_availability_mcm` and `annual_groundwater_draft_mcm`.
+- Use only open-source Python libraries already appropriate for the project (standard library, NumPy, pandas; matplotlib/seaborn optional for diagnostics).
+- All randomness must be controlled by a supplied seed.
+- This Version 2 design replaces the earlier zone-level synthetic generator; do not reuse zone aggregation as its mechanism.
 
-Read these files before implementation and follow them if there is any conflict:
+The authoritative schema is [DATA_CONTRACT.md](DATA_CONTRACT.md). If this brief conflicts with that contract, the contract wins.
 
-1. `RESEARCH_DESIGN_DOCUMENT.md` — research scope, assumptions, leakage rules, evaluation design.
-2. `DATA_CONTRACT.md` — authoritative schema, field definitions, quality rules, aggregation rules, and file conventions.
-3. `IMPLEMENTATION_PLAN.md` — project-wide sequencing and Version 1 assumptions.
+## 3. Required repository deliverables
 
-Key fixed decisions:
-
-- Forecasting scope: residential demand only.
-- Canonical frequency: monthly.
-- Canonical unit: cubic metres (`m3`) per month for water-volume fields.
-- Spatial design: five **neutral synthetic** zones, not asserted to match real administrative boundaries.
-- Zone IDs: `zone_01`, `zone_02`, `zone_03`, `zone_04`, `zone_05`.
-- Default coverage: 15 complete calendar years, January 2010 through December 2024.
-- Default random seed: `2026`.
-- Canonical dataset size: 900 rows (15 years × 12 months × 5 zones).
-- `DNH_total` is a separately derived monthly aggregate, not a canonical source-zone row.
-
-The date range and seed must be configurable. The defaults above are Version 1 defaults, not hard-coded assumptions scattered through the code.
-
-## 3. Required outputs
-
-Create these output artifacts using the exact canonical fields and a versioned naming convention:
+Create or replace these Version 2 artifacts (minor naming changes are acceptable only if documented):
 
 ```text
-data/synthetic/raw/synthetic_zone_monthly_v1.csv
-data/synthetic/derived/synthetic_dnh_total_monthly_v1.csv
-data/synthetic/metadata/synthetic_zone_monthly_v1_metadata.json
+configs/synthetic_dnh_total_v2.json
+src/data_generation/generate_synthetic_dnh_total.py
+src/data_generation/synthetic_dnh_total_generator.py
+src/validation/validate_dnh_total_dataset.py
+tests/test_synthetic_dnh_total_generator.py
+data/synthetic/raw/synthetic_dnh_total_monthly_v2.csv
+data/synthetic/metadata/synthetic_dnh_total_monthly_v2_metadata.json
 ```
 
-The agent may add a generation configuration file and automated tests under appropriate project folders. Do not overwrite user-provided data.
+The command-line entry point must load the JSON configuration, generate the dataset, validate it, write the CSV and metadata, and exit non-zero if validation fails. Do not require notebooks or manual steps to create the core dataset.
 
-### 3.1 Canonical zone-level CSV
+## 4. Exact output schema
 
-The canonical CSV must contain these columns, in this order:
+Output the following columns in this exact order:
 
 ```text
 date
 area_id
 rainfall_mm
-population
-water_consumption_m3
-area_water_usage_m3
+temp_max_c
+temp_min_c
+humidity_max_pct
+humidity_min_pct
+wind_speed_kmh
+solar_radiation_mj_m2
+sunshine_hours
+total_population
+urban_population
+total_households
+reservoir_level_m
+canal_discharge_cumecs
+groundwater_level_m_bgl
 residential_water_demand_m3
 ```
 
-Rules:
-
-- `date` uses `YYYY-MM-01` and represents the month.
-- exactly five valid zone IDs appear;
-- each zone has consecutive monthly records;
-- (`date`, `area_id`) is unique;
-- all required values are present and numeric;
-- `population` is a positive integer;
-- rainfall and all water-volume fields are non-negative;
-- demand must be strictly positive;
-- sort by `date`, then `area_id`.
-
-The default canonical dataset is clean. Do not inject missing values or anomalies into it.
-
-### 3.2 Derived DNH-total CSV
-
-Create one row per month with `area_id = DNH_total` using the aggregation rules from `DATA_CONTRACT.md`:
-
-- sum: `population`, `water_consumption_m3`, `area_water_usage_m3`, and `residential_water_demand_m3`;
-- rainfall: population-weighted mean of zone rainfall.
-
-This file has 180 rows and uses the same column order as the zone-level CSV.
-
-### 3.3 Metadata JSON
-
-The metadata file must include:
-
-- dataset name and version;
-- statement that the data is synthetic and not real DNH data;
-- generator version;
-- generation timestamp;
-- random seed;
-- start and end dates;
-- zone IDs;
-- row counts for zone and aggregate outputs;
-- generator configuration or a reference to the configuration file;
-- field units;
-- a concise description of the synthetic relationships;
-- output-file paths;
-- validation result summary.
-
-## 4. Recommended implementation structure
-
-Use Python with open-source libraries. Prefer a small, modular implementation rather than one large notebook.
-
-Suggested files:
-
-```text
-configs/synthetic_data_v1.json
-src/data_generation/generate_synthetic_data.py
-src/data_generation/synthetic_generator.py
-src/validation/validate_dataset.py
-tests/test_synthetic_generator.py
-```
-
-`numpy`, `pandas`, the Python standard library, and `pytest` are sufficient. Avoid unnecessary dependencies. A JSON configuration file is preferred so configuration can be read without adding a parser dependency.
-
-The exact module names may differ, but the responsibilities must remain separate:
-
-- configuration loading and validation;
-- zone-profile definition;
-- monthly data generation;
-- DNH-total aggregation;
-- dataset validation;
-- file/metadata writing;
-- automated tests.
+Use parseable ISO dates (`YYYY-MM-DD`), numeric values for all measured quantities, and integer population/household fields. The generated frame must contain exactly one row per configured month, no duplicates, no gaps, no nulls, and no infinite values.
 
 ## 5. Configuration requirements
 
-Put all tunable generation assumptions in one versioned configuration file. The generator must expose or configure at least:
+The JSON config must contain at least:
 
-```text
-seed
-start_date
-end_date
-zone_ids
-zone_population_shares
-base_population_total
-annual_population_growth_range
-zone_growth_adjustments
-annual_rainfall_range_mm
-monthly_rainfall_seasonality
-zone_rainfall_multipliers
-rainfall_noise_scale
-per_capita_demand_litres_per_day_range
-zone_demand_multipliers
-demand_seasonality
-rainfall_demand_sensitivity
-demand_autoregressive_strength
-consumption_variation_range
-area_usage_multiplier_range
-noise_scale
-rounding_policy
+```json
+{
+  "schema_version": "2.0",
+  "start_date": "2010-01-01",
+  "periods": 180,
+  "seed": 42,
+  "area_id": "DNH_total",
+  "output_csv": "data/synthetic/raw/synthetic_dnh_total_monthly_v2.csv",
+  "metadata_output": "data/synthetic/metadata/synthetic_dnh_total_monthly_v2_metadata.json"
+}
 ```
 
-Configuration validation must confirm that:
+It should also hold documented, adjustable parameters for baseline population/households, annual growth rates, climate amplitudes/noise, demand coefficients, state-variable response rates, and bounds. Keep parameters interpretable. Do not hard-code a random seed or output path inside the generator.
 
-- zone IDs are unique;
-- population shares are positive and sum to one within a small tolerance;
-- start/end dates form complete months;
-- all generated water-volume values can remain non-negative;
-- date range contains at least 15 years by default, or a clearly logged overridden period;
-- values representing proportions/multipliers are within meaningful bounds.
+## 6. Data-generation design
 
-## 6. Synthetic-data behaviour to model
+Generate a common `month_of_year` seasonal signal (for example, smooth sinusoidal components), then layer distinct weather, demographic, demand, and system-state processes. Weather and system fields should be correlated where logically appropriate but never exact copies of one another. Use small, seeded random disturbances and enforce physical/logical bounds after generation.
 
-The generated data must be correlated and temporally plausible. Do not generate independent random columns.
+### 6.1 Monsoon-led weather
 
-### 6.1 Zone profiles
+Create a recognisable wet monsoon period (roughly June–September, with configurable peak/timing) and a dry period. The generated values do not need to match a particular observed year, but they must have plausible ranges and interannual variability.
 
-Create five distinct synthetic zone profiles. Each profile should differ in some combination of:
+- `rainfall_mm`: strongly monsoon-peaked, non-negative, with occasional dry/wet year effects and month-level noise. A gamma/lognormal-like positive process is preferable to simple unrestricted Gaussian noise.
+- `humidity_max_pct`, `humidity_min_pct`: rise in monsoon months and fall in dry months. Always keep `0 <= minimum <= maximum <= 100`.
+- `sunshine_hours`: generally lower during monsoon/cloudy months and higher in dry/sunny months; non-negative.
+- `solar_radiation_mj_m2`: broadly related to sunshine, but include independent weather noise so it is not a direct transform of sunshine.
+- `temp_max_c`, `temp_min_c`: use annual seasonality, realistic separation, and weather noise. `temp_min_c` must never exceed `temp_max_c`.
+- `wind_speed_kmh`: seasonal but weakly/noisily related to monsoon conditions; non-negative.
 
-- population share and growth rate;
-- rainfall multiplier;
-- baseline per-capita demand;
-- demand seasonality;
-- consumption/usage variation.
+Diagnostic expectation: rainfall and humidity visibly peak in monsoon months; sunshine and solar radiation generally decline then. The relationship should be visible in aggregates, not perfect row-by-row correlation.
 
-Do not use real place names or imply administrative mapping. The goal is enough structural diversity for a later, meaningful K-Means experiment.
+### 6.2 Demographics
 
-### 6.2 Population
+Generate `total_population`, `urban_population`, and `total_households` at monthly frequency.
 
-Generate a positive integer monthly population for each zone.
+- Start with configurable plausible base values.
+- Apply gradual positive growth with modest year-to-year/monthly variation; avoid abrupt drops or step changes.
+- Make urban population a non-decreasing or near-non-decreasing share of total population, always within total population.
+- Grow households consistently with population, allowing household size to change only gradually.
+- Round output population and household counts to integers only at final output.
 
-Expected behaviour:
+Diagnostic expectation: plots show smooth long-run upward trends, not obvious deterministic straight lines or implausible shocks.
 
-- DNH-total baseline population should be plausibly close to the documented historical scale, roughly several hundred thousand people, while remaining explicitly synthetic;
-- each zone begins with its configured population share;
-- population follows a gradual positive long-term growth trend;
-- small, controlled variation is acceptable, but there must be no unrealistic month-to-month jumps;
-- zone growth rates should differ modestly.
+### 6.3 Residential water demand: target process
 
-Population is an estimated monthly series. It may be calculated from annual growth and interpolated monthly, but the chosen method must be documented in metadata/configuration.
+Create `residential_water_demand_m3` as a positive DNH-total monthly target. It must be driven by several components, including:
 
-### 6.3 Rainfall
+1. A demand baseline that scales with population and/or households.
+2. A recurring seasonal component (for example, warmer/drier months and monthly usage behaviour).
+3. Weather effects that are plausible but modest relative to base demand; rainfall may reduce some outdoor demand, while heat may increase demand.
+4. Autoregressive persistence: current demand partly depends on the previous generated month's demand.
+5. Idiosyncratic seeded noise and a small number of bounded shocks so models cannot recover an exact formula.
 
-Generate non-negative monthly rainfall in millimetres with strong monsoon seasonality.
+Do not compute demand as a direct copy of rainfall, a fully deterministic population multiplier, or from target-month variables that later would be unavailable at prediction time. The final relationship should support modelling with historical lags while retaining genuine forecast difficulty.
 
-Expected behaviour:
+Use a positive lower bound. Preserve reasonable month-to-month variation—avoid either perfectly smooth demand or erratic negative/near-zero values. Document the selected formula/components and coefficients in metadata.
 
-- June through September should form the dominant wet season;
-- remaining months should generally be drier;
-- annual totals should vary year to year, with most totals in a configurable plausible DNH-inspired range of roughly 2,000–3,500 mm;
-- zones should share a regional climate signal but have modest spatial variation;
-- noise must not remove the seasonal pattern or create negative rainfall.
+### 6.4 Supply and groundwater state variables
 
-The PPT contains approximate annual rainfall context, but do not attempt to recreate or claim exact observed DNH yearly values.
+Generate these after weather and demand so they exhibit gradual state behaviour:
 
-### 6.4 Residential demand — target
+- `reservoir_level_m`: a bounded carry-over state. It rises with rainfall/recharge and falls with withdrawals/use, using a response rate so it does not jump instantly each month. Output a month-end level.
+- `groundwater_level_m_bgl`: a bounded carry-over state where a larger number means deeper water below ground. It should tend to improve/shallow after rainfall recharge and worsen/deepen with demand/use, with lagged response and noise.
+- `canal_discharge_cumecs`: a non-negative monthly mean flow with seasonal planning/supply behaviour, influenced noisily by season, reservoir availability, and demand. It must not be a simple scalar multiple of demand or rainfall.
 
-Generate `residential_water_demand_m3` as the primary target. It should be a plausible function of:
+All levels must remain within explicit configurable physical bounds. Make the feedback intentionally stable: response rates must prevent runaway reservoir depletion, groundwater deepening, or oscillation over 180 months.
 
-- zone population;
-- base per-capita demand, expressed in litres/person/day then converted to monthly cubic metres;
-- month/season effect;
-- rainfall-related seasonal effect, with a modest configurable relationship;
-- gradual long-term growth;
-- prior-month demand persistence/autocorrelation;
-- zone-specific behaviour;
-- realistic random noise.
+## 7. Recommended generation order
 
-A recommended conceptual form is:
+1. Read config, validate required keys, initialise `numpy.random.Generator(seed)`, and create dates.
+2. Build calendar columns internally (`month`, year index, monsoon indicator, smooth seasonal functions). Do not include internal helper columns in the final CSV unless explicitly added to a separate diagnostic output.
+3. Generate weather with shared interannual shocks plus field-specific noise.
+4. Generate demographic trajectories.
+5. Iteratively generate demand and carry-over state variables month by month, so demand lag and storage/recharge dynamics are real.
+6. Assemble only the canonical 17 columns in exact order.
+7. Apply rounding only for output presentation; retain sufficient numeric precision for continuous fields.
+8. Run the reusable validator. Write outputs only if validation passes, or clearly mark/remove partial outputs if it fails.
+9. Write metadata capturing reproducibility and diagnostic summaries.
 
-```text
-demand(t) = population(t)
-          × base_per_capita_demand
-          × days_in_month
-          × seasonal_factor(month)
-          × rainfall_adjustment(rainfall(t))
-          × zone_factor
-          + persistence_from_demand(t-1)
-          + bounded_noise
-```
+## 8. Validation requirements
 
-The implementation may use a mathematically safer equivalent. It must keep demand positive, avoid extreme values, and record the selected parameter values.
+Implement a reusable validator callable from both the CLI and tests. It must check:
 
-The raw dataset may generate contemporaneous demand from contemporaneous simulated drivers. This is acceptable for data simulation. Later forecasting code must obey the leakage rules and use only lagged/past versions of drivers unless a feature is known at the forecast origin.
+### Structural checks
 
-### 6.5 Consumption and area-wide usage
+- exact schema and column order;
+- expected row count;
+- one `DNH_total` area ID only;
+- dates are monthly, unique, ascending, and consecutive;
+- no missing, infinite, or non-numeric measurement values.
 
-Generate related but distinct fields:
+### Domain checks
 
-- `water_consumption_m3`: a correlated historical operational measure. It must not be exactly equal to target demand. Model controlled supply, loss, metering, or usage variation around demand.
-- `area_water_usage_m3`: a broader optional usage proxy. Model it as related to consumption but with an additional controlled system-level/non-residential component.
+- non-negative: rainfall, wind, solar radiation, sunshine, canal discharge, and demand;
+- valid humidity order/range;
+- `temp_min_c <= temp_max_c`;
+- population/households positive and `urban_population <= total_population`;
+- configured bounds respected for reservoir and groundwater levels;
+- no forbidden zone, village, agriculture, quality, availability, draft, consumption, or hour columns.
 
-Both fields must remain non-negative. Their relationship to demand must be strong enough for realistic lagged predictive value but imperfect enough to prevent trivial target reconstruction.
+### Behavioural checks
 
-## 7. Reproducibility rules
+- monsoon mean rainfall exceeds dry-season mean rainfall by a meaningful configurable ratio;
+- monsoon humidity is higher and sunshine is lower than dry-season aggregates;
+- population and households have a positive overall trend without large discontinuities;
+- demand has non-zero variance, positive values, and meaningful but not extreme month-to-month change;
+- reservoir and groundwater have non-zero variance and are not constant/direct duplicates of rainfall;
+- canal discharge has non-zero seasonal variation;
+- all required relationships are checked using tolerant aggregate thresholds, not brittle exact correlations.
 
-1. Use one local random-number generator seeded from the configuration.
-2. Running the generator twice with the same configuration and seed must create identical CSV content, excluding metadata timestamp if one is included.
-3. Do not use external APIs, web data, or current dates as model inputs.
-4. Do not use non-deterministic iteration order.
-5. Record every config value that affects output in metadata.
+The validator should return a structured result or raise a clear exception that identifies every failed rule.
 
-## 8. Required validation implementation
+## 9. Tests and reproducibility
 
-Implement reusable validation, not only ad-hoc assertions in the generator.
+Write automated tests covering at least:
 
-The validation function must check:
+1. Default configuration produces exactly 180 rows and the exact schema.
+2. The same config and seed produce byte-equivalent values/dataframe output.
+3. A changed seed changes stochastic output while preserving structural/domain validity.
+4. Invalid configurations (bad date, non-positive periods, missing seed/area ID, invalid bounds) fail clearly.
+5. Validator rejects missing columns, duplicate/gapped dates, non-DNH area IDs, invalid humidity/temperature/population relationships, and negative demand.
+6. Default generated output passes all behavioural checks.
 
-```text
-required canonical columns and their order
-valid monthly dates normalised to day 1
-valid configured area IDs
-unique (date, area_id) pairs
-continuous monthly coverage per area
-expected 900 zone rows and 180 aggregate rows under default config
-positive integer population
-non-negative rainfall/consumption/usage
-strictly positive demand
-no null, infinite, or non-numeric values in required fields
-sort order
-correct aggregate sums and population-weighted rainfall
-plausible configured ranges and no unflagged extreme values
-```
+Metadata JSON must include: schema/generator version, timestamp, configured date range/periods, seed, `area_id`, full config or its hash, exact column list, row count, file paths, validation result, summary statistics, and a clear statement that the data is synthetic.
 
-Validation should return a machine-readable summary that can be written to metadata. It should raise a clear error when a required rule fails.
+## 10. Acceptance checklist
 
-## 9. Required tests
+Phase 3 is complete only when all items hold:
 
-Add automated tests covering at least:
+- A documented command produces the CSV and metadata from a clean checkout/environment.
+- The output conforms exactly to the Version 2 data contract.
+- Re-running with the same config/seed is reproducible.
+- Tests and generator validation pass.
+- Time-series plots or numerical diagnostics demonstrate monsoon patterns, smooth demographics, non-trivial demand variation, and gradual water-system state response.
+- No multi-zone/Village/pateload artifacts remain in the Version 2 dataset or generation path.
+- A reader can distinguish synthetic data from real DNH observations from the metadata and documentation.
 
-1. Default generation creates the expected canonical and aggregate schemas.
-2. Default generation creates 900 zone rows and 180 aggregate rows.
-3. Each zone has 180 consecutive monthly rows.
-4. Default generation is deterministic for the configured seed.
-5. Different seeds change the generated data.
-6. Zone IDs, units, types, and non-negativity/positivity rules conform to the contract.
-7. DNH-total monthly demand, population, consumption, and usage equal zone sums.
-8. DNH-total rainfall equals the population-weighted zone rainfall.
-9. The generator rejects invalid configuration, such as duplicate zones or population shares that do not sum to one.
-
-The implementation should also include a lightweight descriptive check or test showing that the seasonal rainfall pattern exists—for example, mean monsoon rainfall is greater than mean non-monsoon rainfall.
-
-## 10. Optional controlled data-quality scenario
-
-Do not contaminate the default canonical dataset. If implemented, a separate, opt-in quality-test scenario may create controlled missing values or anomalies for future preprocessing tests.
-
-Requirements:
-
-- it uses a distinct output filename and metadata label;
-- the default configuration leaves it disabled;
-- injected records are documented by field, count, date, and zone;
-- it is never used as the normal modelling dataset without explicit configuration.
-
-This feature is optional for Phase 3 and must not delay the clean default generator.
-
-## 11. Acceptance criteria
-
-Phase 3 is complete when all of the following are true:
-
-1. A clean default zone-level dataset and derived DNH-total dataset are generated in the defined paths.
-2. Both datasets conform to `DATA_CONTRACT.md`.
-3. Metadata and configuration are stored with the outputs.
-4. The data has reproducible, realistic temporal and cross-zone structure: seasonality, rainfall variation, gradual population growth, demand trends, persistence, and non-identical related usage variables.
-5. Automated validation and the required tests pass.
-6. The implementation makes no claim that synthetic results are real DNH results.
-7. No code for later project phases is introduced unless it is a minimal reusable validation utility required by this phase.
-
-## 12. Handoff requirements for the implementing agent
-
-When reporting completion, provide:
-
-- files created/changed;
-- the command used to generate the default data;
-- the command used to run tests;
-- test/validation results;
-- dataset row counts and date coverage;
-- a concise explanation of the generated relationships;
-- any deviations from this brief and why.
-
-Do not modify the governing research-design or data-contract decisions without reporting a specific conflict or asking for approval.
+## 11. Handoff to Phase 4

@@ -1,0 +1,143 @@
+{
+  "schema_version": "2.0",
+  "start_date": "2010-01-01",
+  "periods": 180,
+  "seed": 42,
+  "area_id": "DNH_total",
+  "output_csv": "data/synthetic/raw/synthetic_dnh_total_monthly_v2.csv",
+  "metadata_output": "data/synthetic/metadata/synthetic_dnh_total_monthly_v2_metadata.json",
+  "metadata": {
+    "schema_version": "2.0",
+    "description": "Configuration for Version 2 synthetic DNH-total monthly water-demand generator"
+  },
+  "dates": {
+    "start_date": "2010-01-01",
+    "periods": 180,
+    "comment": "180 months = 15 years (2010-01 to 2024-12)"
+  },
+  "randomization": {
+    "seed": 42,
+    "comment": "Deterministic seed for reproducibility"
+  },
+  "geography": {
+    "area_id": "DNH_total",
+    "comment": "Single area: combined Dadra and Nagar Haveli"
+  },
+  "output": {
+    "csv_path": "data/synthetic/raw/synthetic_dnh_total_monthly_v2.csv",
+    "metadata_path": "data/synthetic/metadata/synthetic_dnh_total_monthly_v2_metadata.json"
+  },
+  "demographics": {
+    "baseline_total_population": 865000,
+    "baseline_urban_population": 250000,
+    "baseline_total_households": 175000,
+    "annual_population_growth_rate": 0.025,
+    "comment": "2.5% annual growth; urban share starts at ~29%, grows slowly. Households scale with population."
+  },
+  "weather": {
+    "monsoon_months": [6, 7, 8, 9],
+    "rainfall": {
+      "annual_baseline_mm": 1800,
+      "annual_noise_std": 300,
+      "monsoon_peak_fraction": 0.65,
+      "comment": "Monsoon gets 65% of annual total; distributed within June-September. Lognormal-like positive process."
+    },
+    "temperature": {
+      "temp_max_baseline_c": 32,
+      "temp_min_baseline_c": 20,
+      "annual_cycle_amplitude": 8,
+      "daily_variance_noise": 2,
+      "comment": "Realistic DNH-like temperature range and seasonality"
+    },
+    "humidity": {
+      "humidity_max_baseline_pct": 80,
+      "humidity_min_baseline_pct": 55,
+      "monsoon_max_shift": 15,
+      "monsoon_min_shift": 10,
+      "comment": "Monsoon increases both max and min humidity"
+    },
+    "sunshine": {
+      "sunshine_hours_annual_baseline": 2500,
+      "monsoon_reduction_fraction": 0.35,
+      "comment": "Monsoon reduces sunshine by ~35%"
+    },
+    "solar_radiation": {
+      "solar_radiation_annual_baseline_mj_m2": 5000,
+      "monsoon_reduction_fraction": 0.30,
+      "independent_noise_std": 0.15,
+      "comment": "Related to sunshine but with independent noise"
+    },
+    "wind": {
+      "wind_speed_baseline_kmh": 6,
+      "monsoon_increase_fraction": 0.20,
+      "noise_std": 1.5,
+      "comment": "Weakly tied to monsoon; mostly noise"
+    }
+  },
+  "demand": {
+    "baseline_demand_lpd": 120,
+    "comment": "Litres per person per day baseline; will be converted to m³/month",
+    "seasonality": {
+      "monsoon_multiplier": 0.85,
+      "dry_multiplier": 1.10,
+      "comment": "Monsoon reduces demand (more water available), dry season increases"
+    },
+    "rainfall_elasticity": -0.0005,
+    "comment": "Modest: -0.0005 means 1 mm rainfall reduces demand slightly",
+    "autoregressive_strength": 0.4,
+    "comment": "40% of current demand explained by previous month's demand",
+    "noise_std": 0.06,
+    "comment": "6% multiplicative noise per month"
+  },
+  "system_state": {
+    "reservoir": {
+      "baseline_level_m": 35,
+      "max_level_m": 50,
+      "min_level_m": 5,
+      "recharge_response_rate": 0.3,
+      "discharge_response_rate": 0.25,
+      "comment": "Gradual response: doesn't jump instantly with rainfall or demand"
+    },
+    "groundwater": {
+      "baseline_level_m_bgl": 8,
+      "max_level_m_bgl": 25,
+      "min_level_m_bgl": 2,
+      "recharge_response_rate": 0.2,
+      "discharge_response_rate": 0.15,
+      "comment": "Deeper = larger number. Slower response than reservoir; monsoon improves."
+    },
+    "canal_discharge": {
+      "baseline_discharge_cumecs": 2.5,
+      "max_discharge_cumecs": 8,
+      "min_discharge_cumecs": 0.3,
+      "seasonal_variation": {
+        "dry_multiplier": 1.2,
+        "monsoon_multiplier": 0.9
+      },
+      "demand_elasticity": 0.15,
+      "comment": "Supply-aware: rises with demand (within limits), falls in monsoon (more water in system)"
+    }
+  },
+  "realism": {
+    "extreme_year_probability": 0.18,
+    "drought_multiplier_range": [0.65, 0.88],
+    "flood_multiplier_range": [1.3, 1.75],
+    "extreme_month_probability": 0.04,
+    "demand_shock_probability": 0.035,
+    "demand_shock_range": [0.82, 1.25],
+    "state_noise_std": 0.03,
+    "comment": "Adds occasional climate/extreme-demand months and more natural state variability while preserving the 15-year monthly scope."
+  },
+  "validation": {
+    "monsoon_to_dry_rainfall_ratio": 3.5,
+    "comment": "Monsoon mean rainfall must be at least 3.5x dry season mean",
+    "monsoon_to_dry_humidity_ratio": 1.15,
+    "comment": "Monsoon mean humidity must be ~1.15x dry season mean",
+    "monsoon_to_dry_sunshine_ratio": 0.75,
+    "comment": "Monsoon sunshine should be ~75% of dry season (lower during clouds)",
+    "population_growth_tolerance": 0.05,
+    "comment": "Max month-to-month population change should be <5%",
+    "demand_min_variance": 5000,
+    "comment": "Demand must have non-trivial variance (m³/month)"
+  }
+}
