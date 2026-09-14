@@ -96,6 +96,9 @@
       "min_level_m": 5,
       "recharge_response_rate": 0.3,
       "discharge_response_rate": 0.25,
+      "rainfall_recharge_per_100mm_m": 1.5,
+      "demand_withdrawal_per_million_m3_m": 1.0,
+      "mean_reversion_rate": 0.08,
       "comment": "Gradual response: doesn't jump instantly with rainfall or demand"
     },
     "groundwater": {
@@ -104,6 +107,9 @@
       "min_level_m_bgl": 2,
       "recharge_response_rate": 0.2,
       "discharge_response_rate": 0.15,
+      "rainfall_recharge_per_100mm_m": 0.25,
+      "demand_drawdown_per_million_m3_m": 0.5,
+      "mean_reversion_rate": 0.08,
       "comment": "Deeper = larger number. Slower response than reservoir; monsoon improves."
     },
     "canal_discharge": {

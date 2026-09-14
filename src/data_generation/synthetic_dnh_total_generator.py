@@ -103,11 +103,17 @@ class SyntheticDNHTotalGenerator:
         self.reservoir_min = float(sys_state["reservoir"]["min_level_m"])
         self.reservoir_recharge_rate = float(sys_state["reservoir"]["recharge_response_rate"])
         self.reservoir_discharge_rate = float(sys_state["reservoir"]["discharge_response_rate"])
+        self.reservoir_recharge_per_100mm = float(sys_state["reservoir"].get("rainfall_recharge_per_100mm_m", 1.5))
+        self.reservoir_withdrawal_per_million = float(sys_state["reservoir"].get("demand_withdrawal_per_million_m3_m", 1.0))
+        self.reservoir_mean_reversion = float(sys_state["reservoir"].get("mean_reversion_rate", 0.08))
         self.gw_baseline = float(sys_state["groundwater"]["baseline_level_m_bgl"])
         self.gw_max = float(sys_state["groundwater"]["max_level_m_bgl"])
         self.gw_min = float(sys_state["groundwater"]["min_level_m_bgl"])
         self.gw_recharge_rate = float(sys_state["groundwater"]["recharge_response_rate"])
         self.gw_discharge_rate = float(sys_state["groundwater"]["discharge_response_rate"])
+        self.gw_recharge_per_100mm = float(sys_state["groundwater"].get("rainfall_recharge_per_100mm_m", 0.25))
+        self.gw_drawdown_per_million = float(sys_state["groundwater"].get("demand_drawdown_per_million_m3_m", 0.5))
+        self.gw_mean_reversion = float(sys_state["groundwater"].get("mean_reversion_rate", 0.08))
         self.canal_baseline = float(sys_state["canal_discharge"]["baseline_discharge_cumecs"])
         self.canal_max = float(sys_state["canal_discharge"]["max_discharge_cumecs"])
         self.canal_min = float(sys_state["canal_discharge"]["min_discharge_cumecs"])
@@ -441,17 +447,27 @@ class SyntheticDNHTotalGenerator:
 
             last_demand = demand
 
-            # Reservoir level: carry-over state with a more natural, noisy transition.
-            rainfall_recharge = rainfall * 0.01
-            demand_withdrawal = demand / 100000
-            reservoir_level = reservoir_level + self.reservoir_recharge_rate * (rainfall_recharge - self.reservoir_discharge_rate * demand_withdrawal)
+            # Reservoir level: normalized water balance with gradual mean reversion.
+            rainfall_recharge = (rainfall / 100.0) * self.reservoir_recharge_per_100mm
+            demand_withdrawal = (demand / 1_000_000.0) * self.reservoir_withdrawal_per_million
+            reservoir_delta = (
+                self.reservoir_recharge_rate * rainfall_recharge
+                - self.reservoir_discharge_rate * demand_withdrawal
+                + self.reservoir_mean_reversion * (self.reservoir_baseline - reservoir_level)
+            )
+            reservoir_level = reservoir_level + reservoir_delta
             reservoir_level += float(self.rng.normal(0, self.state_noise_std))
             reservoir_level = np.clip(reservoir_level, self.reservoir_min, self.reservoir_max)
 
-            # Groundwater level: carry-over state (larger number = deeper), slower and noisier.
-            rainfall_recharge_gw = rainfall * 0.001
-            demand_depletion = demand / 50000
-            gw_level = gw_level - self.gw_recharge_rate * rainfall_recharge_gw + self.gw_discharge_rate * demand_depletion
+            # Groundwater level: depth increases with depletion and falls with recharge.
+            rainfall_recharge_gw = (rainfall / 100.0) * self.gw_recharge_per_100mm
+            demand_depletion = (demand / 1_000_000.0) * self.gw_drawdown_per_million
+            gw_delta = (
+                -self.gw_recharge_rate * rainfall_recharge_gw
+                + self.gw_discharge_rate * demand_depletion
+                + self.gw_mean_reversion * (self.gw_baseline - gw_level)
+            )
+            gw_level = gw_level + gw_delta
             gw_level += float(self.rng.normal(0, self.state_noise_std * 0.75))
             gw_level = np.clip(gw_level, self.gw_min, self.gw_max)
 

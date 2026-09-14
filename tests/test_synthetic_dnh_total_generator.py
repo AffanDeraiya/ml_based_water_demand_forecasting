@@ -466,6 +466,28 @@ def test_state_variables_saturate_at_bounds(config):
     assert df["groundwater_level_m_bgl"].between(4, 5).all()
 
 
+def test_default_state_variables_do_not_saturate_at_bounds(config):
+    """Default state dynamics must retain useful variation inside operating bands."""
+    gen = SyntheticDNHTotalGenerator(config)
+    df = gen.generate_all()
+
+    reservoir = config["system_state"]["reservoir"]
+    groundwater = config["system_state"]["groundwater"]
+    reservoir_at_bound = (
+        df["reservoir_level_m"].eq(float(reservoir["min_level_m"]))
+        | df["reservoir_level_m"].eq(float(reservoir["max_level_m"]))
+    ).mean()
+    groundwater_at_bound = (
+        df["groundwater_level_m_bgl"].eq(float(groundwater["min_level_m_bgl"]))
+        | df["groundwater_level_m_bgl"].eq(float(groundwater["max_level_m_bgl"]))
+    ).mean()
+
+    assert reservoir_at_bound <= 0.10
+    assert groundwater_at_bound <= 0.10
+    assert df["reservoir_level_m"].nunique() >= 24
+    assert df["groundwater_level_m_bgl"].nunique() >= 24
+
+
 def test_write_output_creates_files(config, tmp_path):
     """Test that write_output creates CSV and metadata files."""
     gen = SyntheticDNHTotalGenerator(config)
