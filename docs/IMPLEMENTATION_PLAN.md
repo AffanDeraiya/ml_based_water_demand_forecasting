@@ -38,7 +38,7 @@ Deliverables: EDA notebook/script, feature-building module, data-split artifact,
 2. Train/tune Random Forest using the common feature matrix.
 3. Train/tune an ANN with training-only scaling.
 4. Train/tune an LSTM using correctly ordered sequences and training-only scaling.
-5. Forecast one month ahead and produce three-month sequential forecasts for the quarterly total.
+5. Forecast one month ahead and produce three-month sequential forecasts for the quarterly total. **Implemented in Phase 5 horizon outputs.**
 
 Deliverables: reproducible model code, saved configurations/models as appropriate, forecasts, and training diagnostics.
 
