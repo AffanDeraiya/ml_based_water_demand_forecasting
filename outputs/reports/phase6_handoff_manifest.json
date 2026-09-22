@@ -1,0 +1,29 @@
+{
+  "package": "DNH_total Phase 6 evaluation handoff",
+  "status": "READY_FOR_PHASE_7",
+  "source_of_truth": "Saved Phase 5 predictions, diagnostics, horizon forecasts, and chronological artifacts",
+  "selected_test_rmse_leader": "ANN",
+  "selected_validation_rmse_leader": "ANN",
+  "validation_test_rmse_leader_consistent": true,
+  "test_set_policy": "Test predictions were generated after validation-based selection and were not used for tuning.",
+  "regime_summary": {
+    "selected_k": 2,
+    "silhouette_score": 0.2751520609718231
+  },
+  "horizon_summary": "One-month and three-month sequential forecasts and persisted quarterly sums are included; no separate quarterly model is fitted.",
+  "residual_caveat": "Residual distributions and regime relationships describe this synthetic benchmark and are not operational confidence intervals or causal findings.",
+  "baseline_comparison_rows": 6,
+  "stable_model_rankings": 2,
+  "stable_models": [
+    "ANN",
+    "LSTM"
+  ],
+  "unresolved_real_data_questions": [
+    "Confirm the real-data target definition and reporting calendar.",
+    "Reassess feature availability, missingness, and leakage controls after data replacement.",
+    "Revalidate model rankings and demand regimes on real observations."
+  ],
+  "phase7_ready": true,
+  "artifact_manifest": "outputs/reports/phase6_artifact_manifest.json",
+  "rebuild_command": ".\\venv\\Scripts\\python.exe -c \"from src.evaluation.phase6_evaluation import save_phase6_package; save_phase6_package('.')\""
+}

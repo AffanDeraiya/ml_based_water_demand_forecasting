@@ -141,14 +141,6 @@ The selected solution contains two regimes with a training silhouette score of a
 ![Regime timeline](outputs/figures/phase6/08_regime_timeline.png)
 
 Regime-specific model errors are available in [phase6_regime_error_summary.csv](outputs/metrics/phase6_regime_error_summary.csv). These relationships are exploratory and should be independently reassessed with real observations.
-The repository includes:
-
-- Source data and split integrity checks
-- Saved model, prediction, metric, configuration, and diagnostic artifacts
-- Checksummed Phase 5 and Phase 6 manifests
-- Environment metadata and a locked dependency file
-- Regression tests for data generation, feature engineering, models, horizon forecasting, evaluation, packaging, and regime analysis
-- Presentation notebooks covering data preparation, models, comparison, horizon behavior, and evaluation
 
 ## 10. Reproducibility and Quality Controls
 

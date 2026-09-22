@@ -1,0 +1,5 @@
+model,rmse_rank_test,rmse_rank_validation,mae_rank_test,mae_rank_validation,rmse_rank_change,mae_rank_change,ranking_stable
+ANN,1.0,1.0,1.0,1.0,0.0,0.0,True
+LSTM,2.0,2.0,2.0,2.0,0.0,0.0,True
+Random Forest,4.0,3.0,4.0,3.0,1.0,1.0,False
+Seasonal naive,3.0,4.0,3.0,4.0,-1.0,-1.0,False

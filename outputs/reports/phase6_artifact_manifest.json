@@ -1,0 +1,213 @@
+{
+  "package": "DNH_total Phase 6 evaluation package",
+  "status": "READY_FOR_PHASE_7",
+  "generated_at_utc": "2026-09-22T17:25:18.341507+00:00",
+  "source_artifacts": [
+    {
+      "path": "outputs\\reports\\phase5_artifact_manifest.json",
+      "sha256": "5362d7db3c42b6bf6cf5616c0d43514ce443efc92dcdf40b3912bd53a571e3b7",
+      "bytes": 18560
+    },
+    {
+      "path": "outputs\\reports\\phase5_handoff_manifest.json",
+      "sha256": "0438771ce4327617694843f67e4675b8ea9f3f6e4a50afbead0789b324549472",
+      "bytes": 1524
+    },
+    {
+      "path": "outputs\\reports\\phase5_horizon_forecasts.csv",
+      "sha256": "ec29c173b06dff44732dbb4d093156cd2aeb2e629d338cf1f535b7dd7a0c2199",
+      "bytes": 775
+    },
+    {
+      "path": "outputs\\reports\\phase5_quarterly_forecasts.csv",
+      "sha256": "8c65be0998e5565ce3e5131bed8d6e4bdab9aed42eaca89a723f6afb6d5f7dc7",
+      "bytes": 340
+    },
+    {
+      "path": "data\\processed\\features\\dnh_total_monthly_features_v1.csv",
+      "sha256": "e8e9c190832e400fae4328bc21f9b1014caa6450fc576d27929c990730614768",
+      "bytes": 45504
+    },
+    {
+      "path": "data\\processed\\features\\dnh_total_monthly_target_v1.csv",
+      "sha256": "a8945e3c9d7df325fa3265e55229389f6afa2199d0e63a633f00fdc4066ffd7c",
+      "bytes": 3730
+    },
+    {
+      "path": "data\\processed\\splits\\dnh_total_split_metadata_v1.json",
+      "sha256": "36f94a199d027bd392f450b34408502bde51acbfa613467d6516ddda20cbf740",
+      "bytes": 5387
+    }
+  ],
+  "artifact_count": 27,
+  "artifacts": [
+    {
+      "name": "scorecard",
+      "path": "outputs\\metrics\\phase6_scorecard.csv",
+      "sha256": "1bd8f33c4787cb5839032508dad849ad1c0ed0c43798785d5c2b34a46a79d847",
+      "bytes": 912
+    },
+    {
+      "name": "residual_diagnostics",
+      "path": "outputs\\metrics\\phase6_residual_diagnostics.csv",
+      "sha256": "0abfc20c21ccf32ed5ce13b63a69057718aff28081ee9b7d4700b32b5533097a",
+      "bytes": 1254
+    },
+    {
+      "name": "monthly_errors",
+      "path": "outputs\\reports\\phase6_monthly_errors.csv",
+      "sha256": "b15b6a0fe3f00cd6dba866cf4c240c73005f4b59aea7730b037ba5b7fa069c0c",
+      "bytes": 15872
+    },
+    {
+      "name": "horizon_errors",
+      "path": "outputs\\reports\\phase6_horizon_errors.csv",
+      "sha256": "ec13ac4776f001a3031dd0e90744dfe2035b51bee1e5666ac55820854283b54b",
+      "bytes": 696
+    },
+    {
+      "name": "horizon_review",
+      "path": "outputs\\metrics\\phase6_horizon_review.csv",
+      "sha256": "2eafcd9e8529adfc019aabb06529159c6f7cc1494b8048a0f970140139710867",
+      "bytes": 308
+    },
+    {
+      "name": "baseline_comparison",
+      "path": "outputs\\metrics\\phase6_baseline_comparison.csv",
+      "sha256": "3e104317c618a9ce01179b2b8e10b2a49d4c69319098ec597beabac67dffc469",
+      "bytes": 1144
+    },
+    {
+      "name": "selection_review",
+      "path": "outputs\\metrics\\phase6_selection_review.csv",
+      "sha256": "d2e988c73a649a5c316fea3d4a5ce03e5a8506b5672052e8139718ae22d94339",
+      "bytes": 233
+    },
+    {
+      "name": "seasonal_errors",
+      "path": "outputs\\reports\\phase6_seasonal_errors.csv",
+      "sha256": "253b4a83005d049df1ab2f014ec485952b8af9afedd6c2ab68b3abc091fffe7e",
+      "bytes": 7417
+    },
+    {
+      "name": "large_errors",
+      "path": "outputs\\reports\\phase6_large_errors.csv",
+      "sha256": "f560b655a888838d90b0fe81bf0f782d636876471fc4916c4ef639199a275fd7",
+      "bytes": 1703
+    },
+    {
+      "name": "stability",
+      "path": "outputs\\metrics\\phase6_stability_review.csv",
+      "sha256": "1b8c46ef524c5d5408f175c8b4f95f5ade77a8e4c4152bf9278d518a97b20b1c",
+      "bytes": 287
+    },
+    {
+      "name": "regime_assignments",
+      "path": "outputs\\reports\\phase6_regime_assignments.csv",
+      "sha256": "88e27f60403efee33848a385a3ca52ad36b9e56521407909813f5465404686d7",
+      "bytes": 8239
+    },
+    {
+      "name": "regime_error_summary",
+      "path": "outputs\\metrics\\phase6_regime_error_summary.csv",
+      "sha256": "b8784e608e27e121ae32b4ff5bb0bb2837337361e233bce39b123040b894b0ab",
+      "bytes": 1734
+    },
+    {
+      "name": "regime_metadata",
+      "path": "outputs\\metrics\\phase6_regime_metadata.json",
+      "sha256": "0f6fd46b0e80e0b8a524298cffe04829f39afbbe69fcf3ffb29aacc1f02f109c",
+      "bytes": 3219
+    },
+    {
+      "name": "regime_model",
+      "path": "outputs\\models\\phase6_regime_kmeans.joblib",
+      "sha256": "f2dd6dcce596d529630b735bb3b90c79db9ad2d58ca33433dca14d5fad8442c1",
+      "bytes": 3545
+    },
+    {
+      "name": "forecast_vs_actual_validation",
+      "path": "outputs\\figures\\phase6\\01_forecast_vs_actual_validation.png",
+      "sha256": "6c15d3d8a37ce9cbe59b4b5007d356f3581fe3729be63ea9db21455ca0491ce3",
+      "bytes": 253756
+    },
+    {
+      "name": "forecast_vs_actual_test",
+      "path": "outputs\\figures\\phase6\\01_forecast_vs_actual_test.png",
+      "sha256": "0c861ae6281d5e0073cf9c692e9e4de4dd728a2881a3cb270970d4f3768b26f4",
+      "bytes": 297757
+    },
+    {
+      "name": "residual_timeseries",
+      "path": "outputs\\figures\\phase6\\02_residual_timeseries.png",
+      "sha256": "16b708993dd98d265fc994cdd3303eb61dbf1ad672ffa68f298d43f20b9fbfde",
+      "bytes": 512504
+    },
+    {
+      "name": "residual_distributions",
+      "path": "outputs\\figures\\phase6\\03_residual_distributions.png",
+      "sha256": "498f3b2e404da3d2906bb903a641758f38b7bf407fe04ba63306d47dc4c8327c",
+      "bytes": 70191
+    },
+    {
+      "name": "metric_comparison",
+      "path": "outputs\\figures\\phase6\\04_metric_comparison.png",
+      "sha256": "872debf9d0822cab36da39b559f6a43b99cdcfd5eebded7a5716404bf759a49b",
+      "bytes": 46432
+    },
+    {
+      "name": "horizon_forecasts",
+      "path": "outputs\\figures\\phase6\\05_horizon_forecasts.png",
+      "sha256": "5bfb79cc369169e0e7d1864a33b7e8b34dd041ce4eb0acaa6b9ba8ea47800fca",
+      "bytes": 119789
+    },
+    {
+      "name": "regime_sizes",
+      "path": "outputs\\figures\\phase6\\06_regime_sizes.png",
+      "sha256": "bef9bc15162f18f2874e9057993d661f8b9be7ca00f1ce54357afa2cca000b23",
+      "bytes": 34899
+    },
+    {
+      "name": "regime_centroids",
+      "path": "outputs\\reports\\phase6_regime_centroids.csv",
+      "sha256": "373ce2476f2dc719575c44c0c4ea6ae27cbca34f449956017459c52c1d2a9e0d",
+      "bytes": 1643
+    },
+    {
+      "name": "regime_timeline",
+      "path": "outputs\\figures\\phase6\\08_regime_timeline.png",
+      "sha256": "af0b7a84ce991e0904f4b5a4dbff661c4b2f6dc3314461f0506ef540e2ab394d",
+      "bytes": 56384
+    },
+    {
+      "name": "environment",
+      "path": "outputs\\reports\\phase6_environment.json",
+      "sha256": "0b052555e4476d67f8274dee90d5a5c76bff3ee29a68b681b510acfdc3973b88",
+      "bytes": 366
+    },
+    {
+      "name": "notebook",
+      "path": "notebooks\\PHASE_6_EVALUATION_REVIEW.ipynb",
+      "sha256": "8c10465ac1b6e70084e2ee933122457c915b98c0014ded472992a698ac62cbdc",
+      "bytes": 79892
+    },
+    {
+      "name": "handoff_json",
+      "path": "outputs\\reports\\phase6_handoff_manifest.json",
+      "sha256": "12821af19eb75ab6c211c8c32a152a030c0f1ad3bb002bf50011a4b51059087a",
+      "bytes": 1534
+    },
+    {
+      "name": "handoff_markdown",
+      "path": "outputs\\reports\\phase6_handoff_manifest.md",
+      "sha256": "2c9ea4268bfe293483a0ff796dc67ff8ade954ed041885e434052a07ebd6a1ca",
+      "bytes": 911
+    }
+  ],
+  "regime": {
+    "selected_k": 2,
+    "silhouette_score": 0.2751520609718231,
+    "random_state": 42
+  },
+  "rebuild_command": ".\\venv\\Scripts\\python.exe -c \"from src.evaluation.phase6_evaluation import save_phase6_package; save_phase6_package('.')\""
+}

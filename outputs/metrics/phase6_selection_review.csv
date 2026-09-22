@@ -1,0 +1,3 @@
+split,rmse_leader,rmse,mae_leader,mae,rmse_leader_matches_mae_leader,test_rmse_leader_matches_validation
+test,ANN,450990.4847407228,ANN,375856.5896621509,True,True
+validation,ANN,284796.49983995594,ANN,227344.5224650365,True,True
