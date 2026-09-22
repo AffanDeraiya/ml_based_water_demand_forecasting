@@ -1,0 +1,555 @@
+{
+  "package": "DNH_total Phase 5 forecasting model package",
+  "generated_at_utc": "2026-09-22T17:25:14.246348+00:00",
+  "status": "READY_FOR_HANDOFF",
+  "artifact_count": 76,
+  "missing_artifacts": [],
+  "artifacts": [
+    {
+      "path": "data/processed/features/dnh_total_monthly_features_v1.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 45504,
+      "sha256": "e8e9c190832e400fae4328bc21f9b1014caa6450fc576d27929c990730614768"
+    },
+    {
+      "path": "data/processed/features/dnh_total_monthly_target_v1.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 3730,
+      "sha256": "a8945e3c9d7df325fa3265e55229389f6afa2199d0e63a633f00fdc4066ffd7c"
+    },
+    {
+      "path": "data/processed/splits/dnh_total_split_metadata_v1.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 5387,
+      "sha256": "36f94a199d027bd392f450b34408502bde51acbfa613467d6516ddda20cbf740"
+    },
+    {
+      "path": "docs/PHASE_5_FORECASTING_MODELS.md",
+      "exists": true,
+      "kind": "md",
+      "bytes": 13237,
+      "sha256": "7d46d3fcb6d954a993378e8a4f2ba68e018d51c22b29af6590883eda293f1a42"
+    },
+    {
+      "path": "notebooks/ANN_FORECAST_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb",
+      "bytes": 253610,
+      "sha256": "eb249b4839507762d8bb8d7d5f52059cc2f22aafea2fbcba54384f8c30e99065"
+    },
+    {
+      "path": "notebooks/LSTM_FORECAST_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb",
+      "bytes": 13655,
+      "sha256": "1d5ed9298c1bd8f8f6b1dd7824f92ea65e3c619efae31e0bc394fde7c43ba273"
+    },
+    {
+      "path": "notebooks/PHASE_5_HORIZON_FORECAST_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb",
+      "bytes": 5807,
+      "sha256": "93fc5d9ce9e897fc2db46adee1dbb876a53d802227b009eafec6c598295b0c17"
+    },
+    {
+      "path": "notebooks/PHASE_5_MODEL_COMPARISON_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb",
+      "bytes": 666522,
+      "sha256": "7fa649273e01084da629c1ddd2a97a37efdbdd21fb9741223d122a8d1fc26595"
+    },
+    {
+      "path": "notebooks/RANDOM_FOREST_FORECAST_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb",
+      "bytes": 251670,
+      "sha256": "57175d080d8d41cabfbaf1bde956cf1bb90e5dfc8aa299e6b180031417ab3dbe"
+    },
+    {
+      "path": "notebooks/SEASONAL_NAIVE_BASELINE_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb",
+      "bytes": 167179,
+      "sha256": "77a7f99f6e3086505c081e9812d39dc81063579e703ff4a01ac07bb1c653d7ab"
+    },
+    {
+      "path": "outputs/figures/model_ann/01_ann_forecasts.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 265893,
+      "sha256": "119eab7f4b06930455eeb8af461d14260d8272c9c1bf1cb8d97050118e9392c8"
+    },
+    {
+      "path": "outputs/figures/model_baselines/01_seasonal_baseline_comparison.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 202009,
+      "sha256": "ddc2284cf981b7023965394a404edabf8c6191052f77b245d685a529c5b7315a"
+    },
+    {
+      "path": "outputs/figures/model_comparison/01_test_forecast_comparison.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 324646,
+      "sha256": "c2d79dc09dbbe77914acf2222ce2a94219c4e469cc7e828380a9e152aa21c487"
+    },
+    {
+      "path": "outputs/figures/model_comparison/01_validation_forecast_comparison.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 279037,
+      "sha256": "964695288a3da897df85595d3c48ca6b9f612d9d1ffcb8042164f2cd899e41dc"
+    },
+    {
+      "path": "outputs/figures/model_comparison/02_residual_comparison.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 407887,
+      "sha256": "f2d8f3fa9898f42a4fd56d3cf33bcb4c1f8c8939352943e91de6e1364ba5dd43"
+    },
+    {
+      "path": "outputs/figures/model_comparison/03_notebook_forecast_preview.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 226506,
+      "sha256": "af62ab0265f5de06e718b57e17fbc1aeed849da17ec3b5bf943178e81ee9e8a7"
+    },
+    {
+      "path": "outputs/figures/model_comparison/04_notebook_residual_preview.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 183895,
+      "sha256": "5535353c61ee6833c541ff2a2d2081dc385ed0ee2357a585b48d553794c2afbd"
+    },
+    {
+      "path": "outputs/figures/model_lstm/01_lstm_forecasts.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 253748,
+      "sha256": "1d8479442693c9cfccce8337b050b5bc96165cc8766ba174bb0cadab59177d40"
+    },
+    {
+      "path": "outputs/figures/model_random_forest/01_random_forest_forecasts.png",
+      "exists": true,
+      "kind": "png",
+      "bytes": 257660,
+      "sha256": "305911ba4afdaefcdbbe4b4da3822466dac3ffd91149faa0017dea4b453281ce"
+    },
+    {
+      "path": "outputs/metrics/ann_forecaster_configuration.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 1022,
+      "sha256": "3e70456b63616c450b16474842a7a5d58c4cb307df4a063bd27350f7cf760263"
+    },
+    {
+      "path": "outputs/metrics/ann_forecaster_metrics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 363,
+      "sha256": "72504712dadf93d3dedd1d6e70503125ec9d6c11b147206851d23d9d8d3f8d38"
+    },
+    {
+      "path": "outputs/metrics/ann_forecaster_residual_diagnostics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 471,
+      "sha256": "2d86b2c7796c42509d1af90cc1ace3430d27a8917fc3c17e1998efaf33805182"
+    },
+    {
+      "path": "outputs/metrics/ann_tuning.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 437,
+      "sha256": "9f37f6e5a073fdadc59342b626e35cc3f550daefd394a86f4632da875c9761a4"
+    },
+    {
+      "path": "outputs/metrics/ann_validation_loss_curve.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 15513,
+      "sha256": "8ffa2f5bb92a05ec6b96ef8e228c9f5642b4bbd669c718f35f83da23c473f95d"
+    },
+    {
+      "path": "outputs/metrics/lstm_forecaster_configuration.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 171,
+      "sha256": "130dfb4695fb239180bc2d814d699572d3b6cb7e5e27386e39b2086798855fa8"
+    },
+    {
+      "path": "outputs/metrics/lstm_forecaster_metrics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 356,
+      "sha256": "162a1bdcb67380e32543209a2e56c00fcac4fd53bc097549eef4b3b851fc4a84"
+    },
+    {
+      "path": "outputs/metrics/lstm_forecaster_residual_diagnostics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 456,
+      "sha256": "49e6cfe449ada72a816d2b26477157018d5f7c3ee13e30c5b8f7e2b387da13bd"
+    },
+    {
+      "path": "outputs/metrics/lstm_training_history.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 2276,
+      "sha256": "96752d2b0651b61d6be77f5fbb066edb53b12a190ea69fd42ea9113f445f4393"
+    },
+    {
+      "path": "outputs/metrics/lstm_tuning.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 293,
+      "sha256": "68e4efb71f70180b7d953b00fcce7c866f7a720a89d26f7fd28c141fa62f93cf"
+    },
+    {
+      "path": "outputs/metrics/phase5_horizon_metrics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 1155,
+      "sha256": "8d6690811512d6015b78a973bfbc5f0bd94c9c1d17a0f3c30621ad54a0dfc393"
+    },
+    {
+      "path": "outputs/metrics/phase5_model_comparison_coverage.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 229,
+      "sha256": "79069dca1bbff658c5412abbceb0c2106e47ce966dcc030b3b9fac34982c39cf"
+    },
+    {
+      "path": "outputs/metrics/phase5_model_comparison_metrics.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 912,
+      "sha256": "1bd8f33c4787cb5839032508dad849ad1c0ed0c43798785d5c2b34a46a79d847"
+    },
+    {
+      "path": "outputs/metrics/phase5_model_comparison_rankings.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 995,
+      "sha256": "b0933f9d1e07d7241fd699e31ce81524e64263bf0d59b31d79e3904f11f6717a"
+    },
+    {
+      "path": "outputs/metrics/phase5_model_comparison_residuals.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 948,
+      "sha256": "04d9030c47a6342054ee8da5a039d5617a11d2d7b7319bbc5015b1a26df802fe"
+    },
+    {
+      "path": "outputs/metrics/random_forest_feature_importance.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 6047,
+      "sha256": "d5ef4b14ab45f9cfd2507c49ceeec050c3455042bff0bf7f9d60fad1a771ee88"
+    },
+    {
+      "path": "outputs/metrics/random_forest_feature_rank_correlation.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1879,
+      "sha256": "3243d968ac778bcab641198c7402cca8c5ea8abb2c5a2811bc18e02f960fe704"
+    },
+    {
+      "path": "outputs/metrics/random_forest_feature_stability.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 180,
+      "sha256": "639a610a17737419217edefa3823eaed771d29847a08cacbec9b5ec5cdc3a59b"
+    },
+    {
+      "path": "outputs/metrics/random_forest_forecaster_configuration.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 913,
+      "sha256": "70c14d56e9fa69736fab480d9a891771abbd84d27e4fa8a3a9131a9131c86310"
+    },
+    {
+      "path": "outputs/metrics/random_forest_forecaster_metrics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 365,
+      "sha256": "812f80881d2d83b6c41a723f94e081faeadffd10e4c755c90df856b8095c96db"
+    },
+    {
+      "path": "outputs/metrics/random_forest_forecaster_residual_diagnostics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 470,
+      "sha256": "f8fc98072993e8d4c2c45d88c3c0cdc0b415c23a7ce35a3a6d046c55ef241a09"
+    },
+    {
+      "path": "outputs/metrics/random_forest_tuning.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 369,
+      "sha256": "e60541387038b3db83f594c17e994961eca4fb37b4937c0857e934c9581a4ecd"
+    },
+    {
+      "path": "outputs/metrics/seasonal_naive_baseline_configuration.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 110,
+      "sha256": "bd392010f06ad00544debf078698cdc70cab3c2b61d5d31858a4441506330bd7"
+    },
+    {
+      "path": "outputs/metrics/seasonal_naive_baseline_metrics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 364,
+      "sha256": "0211f6b91b9001a75bc514a8d169b6618baafe41a4ff0bd5f5923ea086a42138"
+    },
+    {
+      "path": "outputs/metrics/seasonal_naive_baseline_residual_diagnostics.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 461,
+      "sha256": "f0aaf273c07f3364916f3dba0c88da2ab444fa697136579985725ff87da301ef"
+    },
+    {
+      "path": "outputs/models/ann_forecaster.joblib",
+      "exists": true,
+      "kind": "joblib",
+      "bytes": 79560,
+      "sha256": "942d917a2b87f267015e66eebbf6109076b9254cd775647cb9cf653d7035a44e"
+    },
+    {
+      "path": "outputs/models/lstm_forecaster.pt",
+      "exists": true,
+      "kind": "pt",
+      "bytes": 15093,
+      "sha256": "8c85b09c37b1bd2161c56e8bfbe4a805f407a067d2f537506eb9424f45da1cc2"
+    },
+    {
+      "path": "outputs/models/random_forest_forecaster.joblib",
+      "exists": true,
+      "kind": "joblib",
+      "bytes": 2964191,
+      "sha256": "b6c299f9e74864a17cb9844a585c298fd4fb76c8178a706c987f9cb30d1a781c"
+    },
+    {
+      "path": "outputs/models/seasonal_naive_baseline.joblib",
+      "exists": true,
+      "kind": "joblib",
+      "bytes": 4679,
+      "sha256": "385a6f6616fbe134ceee983e9deaf63c58e8c7f0522b49f06e2ab9505bb36760"
+    },
+    {
+      "path": "outputs/reports/ann_forecaster_predictions.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1899,
+      "sha256": "2a878a864a47af30d6f005b10809d4661ee170e9ec0234a64c4cdcb2a47564d1"
+    },
+    {
+      "path": "outputs/reports/ann_forecaster_residuals.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1939,
+      "sha256": "8d09068942450463248ec10755ce46d963a94be681e62d39de7bfd4fc7ca184d"
+    },
+    {
+      "path": "outputs/reports/lstm_forecaster_predictions.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1612,
+      "sha256": "c481b4ca3540ae5709534865444d67a16aebfcd3c9a39f77ccbd0eb64efdb936"
+    },
+    {
+      "path": "outputs/reports/lstm_forecaster_residuals.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1789,
+      "sha256": "7e5498d54431fa71d20aa78a3e86969f4257e44dda8b61f371930e74e1a984d8"
+    },
+    {
+      "path": "outputs/reports/phase5_handoff_manifest.json",
+      "exists": true,
+      "kind": "json",
+      "bytes": 1524,
+      "sha256": "0438771ce4327617694843f67e4675b8ea9f3f6e4a50afbead0789b324549472"
+    },
+    {
+      "path": "outputs/reports/phase5_handoff_manifest.md",
+      "exists": true,
+      "kind": "md",
+      "bytes": 584,
+      "sha256": "651aecbb92e6477b7c15d6f4cf3a433143bf06039466dd501095b937b8b7f541"
+    },
+    {
+      "path": "outputs/reports/phase5_horizon_forecasts.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 775,
+      "sha256": "ec29c173b06dff44732dbb4d093156cd2aeb2e629d338cf1f535b7dd7a0c2199"
+    },
+    {
+      "path": "outputs/reports/phase5_quarterly_forecasts.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 340,
+      "sha256": "8c65be0998e5565ce3e5131bed8d6e4bdab9aed42eaca89a723f6afb6d5f7dc7"
+    },
+    {
+      "path": "outputs/reports/random_forest_forecaster_predictions.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1908,
+      "sha256": "acdbba1ccd5104445dc48983697bdf80f61ed4b7a316bbf5b93e36dc8ac44b44"
+    },
+    {
+      "path": "outputs/reports/random_forest_forecaster_residuals.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1923,
+      "sha256": "85ea76c47e1bdcde28ae16c74bb338f4666401db737d410a904fe35524d37369"
+    },
+    {
+      "path": "outputs/reports/seasonal_naive_baseline_predictions.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1402,
+      "sha256": "496169d5073c264a44d226f090646d282f4a898021bc18f674698783a584c07c"
+    },
+    {
+      "path": "outputs/reports/seasonal_naive_baseline_residuals.csv",
+      "exists": true,
+      "kind": "csv",
+      "bytes": 1775,
+      "sha256": "25451bff053d28ef9feb9a32517720b90bc81ec67e5c858655d8cd1493387d63"
+    },
+    {
+      "path": "requirements.txt",
+      "exists": true,
+      "kind": "txt",
+      "bytes": 196,
+      "sha256": "b9e8c0d9e0f67dfe4f38f2cd5f22f2d360057cb4f8393ad8cd112eccb5aeaded"
+    },
+    {
+      "path": "scripts/package_phase5.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 469,
+      "sha256": "d8450ece115493349a9013885251ba1afc64193905fcdf56e19ecba793c0038f"
+    },
+    {
+      "path": "src/evaluation/forecasting_evaluation.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 8395,
+      "sha256": "bf9711c78449dc1a47bff18fa553978d60f51235a19211708f9c474a5e993509"
+    },
+    {
+      "path": "src/evaluation/horizon_forecasting.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 9213,
+      "sha256": "996aab75400c476eaf9776aa52da8c0c14d4bcb3f1fbb5de91f9a73b44ee8fb1"
+    },
+    {
+      "path": "src/evaluation/model_comparison.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 6857,
+      "sha256": "5bcc5ec3dfd2eb31afb55925a6deeb424155a6c5ef62318a3eec73d6c6fc31dc"
+    },
+    {
+      "path": "src/evaluation/phase5_handoff.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 8534,
+      "sha256": "6a921fe332277c9985efc381c8ce019912fd5b16dfa34e43da2a32ecb4e9e0ee"
+    },
+    {
+      "path": "src/models/ann.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 6129,
+      "sha256": "2bf9cede4fc2b8ff8329c507fd15e07dbfa9de1feff80e3afbca00ec4ee1777f"
+    },
+    {
+      "path": "src/models/baselines.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 2215,
+      "sha256": "e1a99c7487be44e07657644c9ca75bc3b16b0caa0b1e2c073ecc4cc528d6c1ac"
+    },
+    {
+      "path": "src/models/lstm.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 12381,
+      "sha256": "a848510fce93de55cf918ef8bbe1495ef3f45480013252b971045092f91a86a8"
+    },
+    {
+      "path": "src/models/random_forest.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 5754,
+      "sha256": "519866074275c89df55c362ae6c1eff98dd273747fb1c6079757919ea0c4bba2"
+    },
+    {
+      "path": "tests/test_phase5_ann.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 1735,
+      "sha256": "9e5381401a7ad69b83779ab5cd3c21272692d8985b3dc7f84a139c6cdb6c660c"
+    },
+    {
+      "path": "tests/test_phase5_evaluation_and_baseline.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 2850,
+      "sha256": "57af84073e29aca477b43b25f6df302276a4e642e88e69282bab19f915bfb509"
+    },
+    {
+      "path": "tests/test_phase5_horizon_forecasting.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 1818,
+      "sha256": "14979baf30038b0bc4bd1b677d2b070a6416074a904e6c49926f0264d746ce1e"
+    },
+    {
+      "path": "tests/test_phase5_lstm.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 1660,
+      "sha256": "5023556aa4945240c34abf1b4a4a5fa768515b0a4e7107c3b941ac237f48c064"
+    },
+    {
+      "path": "tests/test_phase5_model_comparison.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 1369,
+      "sha256": "a42dea7b763665a02e77bae461f039354da49c51a2e0178e4cd2b46e653a2705"
+    },
+    {
+      "path": "tests/test_phase5_random_forest.py",
+      "exists": true,
+      "kind": "py",
+      "bytes": 2201,
+      "sha256": "ca1ccd211df1e11ea7480540066dec90f252b314477ae03d3fcbadc85b592952"
+    }
+  ],
+  "source_of_truth": {
+    "feature_matrix": "data/processed/features/dnh_total_monthly_features_v1.csv",
+    "target": "data/processed/features/dnh_total_monthly_target_v1.csv",
+    "split_metadata": "data/processed/splits/dnh_total_split_metadata_v1.json"
+  },
+  "quarterly_forecast_artifact": "outputs/reports/phase5_quarterly_forecasts.csv",
+  "chronological_splits": {
+    "train_months": 108,
+    "validation_months": 24,
+    "test_months": 36
+  },
+  "regeneration_command": ".\\venv\\Scripts\\python.exe scripts\\package_phase5.py",
+  "test_command": ".\\venv\\Scripts\\python.exe -m pytest -q",
+  "checksum_scope": "The manifest is excluded from its own artifact list because a file cannot contain its final checksum before it is written."
+}

@@ -1,0 +1,50 @@
+{
+  "package": "DNH_total Phase 5 forecasting handoff",
+  "status": "READY_FOR_PHASE_6",
+  "phase5_tasks": {
+    "5.1": "complete",
+    "5.2": "complete",
+    "5.3": "complete",
+    "5.4": "complete",
+    "5.5": "complete",
+    "5.6": "complete",
+    "5.7": "complete",
+    "5.8": "complete"
+  },
+  "source_of_truth": {
+    "feature_matrix": "data/processed/features/dnh_total_monthly_features_v1.csv",
+    "target": "data/processed/features/dnh_total_monthly_target_v1.csv",
+    "split_metadata": "data/processed/splits/dnh_total_split_metadata_v1.json"
+  },
+  "chronological_splits": {
+    "train_months": 108,
+    "validation_months": 24,
+    "test_months": 36
+  },
+  "included_models": [
+    "Seasonal naive",
+    "Random Forest",
+    "ANN",
+    "LSTM"
+  ],
+  "excluded_models": [],
+  "test_set_policy": "Test predictions were generated after validation-based selection and were not used for tuning.",
+  "best_models_by_rmse": [
+    {
+      "split": "test",
+      "model": "ANN",
+      "rmse": 450990.4847407228
+    },
+    {
+      "split": "validation",
+      "model": "ANN",
+      "rmse": 284796.49983995594
+    }
+  ],
+  "limitations": [
+    "All results are based on synthetic data and are not operational evidence.",
+    "The test period was used only for final comparison after validation-based selection."
+  ],
+  "next_phase": "Phase 6 evaluation, residual review, and demand-regime analysis",
+  "artifact_manifest": "outputs/reports/phase5_artifact_manifest.json"
+}

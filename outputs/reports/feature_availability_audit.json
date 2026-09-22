@@ -1,0 +1,10 @@
+{
+  "source_rows": 180,
+  "approved_feature_count": 28,
+  "complete_model_rows": 168,
+  "warm_up_rows_removed": 12,
+  "target_kept_separately": true,
+  "raw_target_month_predictors_used": false,
+  "future_value_fill_used": false,
+  "review_status": "COMPLETE"
+}

@@ -1,0 +1,10 @@
+{
+  "included_models": [
+    "Seasonal naive",
+    "Random Forest",
+    "ANN",
+    "LSTM"
+  ],
+  "excluded_models": [],
+  "reason": "All included models have completed their training and persisted prediction workflow."
+}

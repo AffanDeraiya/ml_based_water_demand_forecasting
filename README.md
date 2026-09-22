@@ -1,6 +1,6 @@
 # DNH Water Demand Forecasting
 
-Repository for reproducible water-demand forecasting pipeline (synthetic first, real later).
+Repository containing the complete synthetic-first water-demand forecasting implementation, source data, generated features, trained models, evaluation outputs, figures, notebooks, and final reports. The committed `data/` and `outputs/` trees are intentional sharing artifacts so a clone includes the current dataset and results.
 
 Quickstart
 
@@ -51,7 +51,16 @@ for notebook in notebooks/*.ipynb; do python -m jupyter execute "$notebook" --ou
 
 Use `requirements-lock.txt` when reproducing the validated environment exactly.
 
-See `docs/` for project documentation.
+The committed artifacts are organized as follows:
+
+- `data/synthetic/`: canonical synthetic DNH-total dataset and metadata
+- `data/processed/`: feature matrix, target, and chronological split artifacts
+- `outputs/models/`: saved forecasting models and the persisted regime pipeline
+- `outputs/metrics/`: model metrics, diagnostics, comparisons, and evaluation summaries
+- `outputs/reports/`: predictions, quarterly forecasts, regime assignments, manifests, and handoff files
+- `outputs/figures/`: EDA, feature, model, horizon, residual, and demand-regime figures
+
+See `docs/` for project specifications and phase documentation.
 
 Key reader-facing documents:
 

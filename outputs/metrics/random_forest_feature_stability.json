@@ -1,0 +1,6 @@
+{
+  "mean_spearman_rank_correlation": 0.949492185124369,
+  "minimum_spearman_rank_correlation": 0.9091406677613574,
+  "mean_top_k_overlap": 0.8722222222222222,
+  "top_k": 10
+}

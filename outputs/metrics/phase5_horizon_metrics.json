@@ -1,0 +1,34 @@
+{
+  "ANN": {
+    "one_month_absolute_error": 343684.3753855089,
+    "three_month_mae": 443586.3072680964,
+    "three_month_rmse": 449711.12504236196,
+    "quarterly_forecast_m3": 14039175.318533527,
+    "quarterly_actual_m3": 14436586.0,
+    "quarterly_error_m3": 397410.68146647234
+  },
+  "LSTM": {
+    "one_month_absolute_error": 474509.5,
+    "three_month_mae": 493891.5,
+    "three_month_rmse": 565788.8499652293,
+    "quarterly_forecast_m3": 12954911.5,
+    "quarterly_actual_m3": 14436586.0,
+    "quarterly_error_m3": 1481674.5
+  },
+  "Random Forest": {
+    "one_month_absolute_error": 604451.9023333336,
+    "three_month_mae": 604722.2136611111,
+    "three_month_rmse": 673369.405635851,
+    "quarterly_forecast_m3": 12622419.359016668,
+    "quarterly_actual_m3": 14436586.0,
+    "quarterly_error_m3": 1814166.6409833333
+  },
+  "Seasonal naive": {
+    "one_month_absolute_error": 93425.09999999963,
+    "three_month_mae": 213242.63333333316,
+    "three_month_rmse": 241151.66462867986,
+    "quarterly_forecast_m3": 14161442.7,
+    "quarterly_actual_m3": 14436586.0,
+    "quarterly_error_m3": 275143.2999999998
+  }
+}

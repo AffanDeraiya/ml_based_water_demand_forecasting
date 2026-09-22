@@ -1,0 +1,16 @@
+{
+  "validation": {
+    "mean_residual": 175864.46666666665,
+    "residual_std": 311400.0497616139,
+    "residual_mae": 291879.1916666667,
+    "residual_rmse": 357628.72036161565,
+    "max_absolute_residual": 752276.0
+  },
+  "test": {
+    "mean_residual": 368900.4916666666,
+    "residual_std": 375233.21266555495,
+    "residual_mae": 433726.936111111,
+    "residual_rmse": 526201.0420354771,
+    "max_absolute_residual": 1276016.7000000002
+  }
+}

@@ -14,7 +14,7 @@ The project is organized as a sequence of validated stages:
 6. Evaluation, horizon review, and demand-regime analysis
 7. Final reporting and reproducibility documentation
 
-The current repository contains the completed implementation and the final report materials. Real-data replacement is outside the current synthetic benchmark.
+The current repository contains the completed implementation, committed synthetic data, generated features, saved models, evaluation outputs, figures, notebooks, and final report materials. A fresh clone therefore includes the current benchmark and its results without requiring regeneration. Real-data replacement is outside the current synthetic benchmark.
 
 ## 2. Start Here
 
@@ -27,7 +27,16 @@ Read these files first:
 
 ### `data/`
 
-Data at different pipeline stages:
+Committed data at different pipeline stages:
+### `outputs/`
+
+Committed generated artifacts for direct inspection and reuse:
+
+- `outputs/models/`: saved ANN, LSTM, Random Forest, seasonal-naive, and regime pipeline artifacts
+- `outputs/metrics/`: model metrics, residual diagnostics, baseline comparisons, horizon review, and regime metadata
+- `outputs/reports/`: saved predictions, quarterly forecasts, regime assignments, manifests, and handoff summaries
+- `outputs/figures/`: EDA, feature, model, residual, horizon, and demand-regime figures
+
 ### `src/`
 
 Reusable implementation modules grouped by responsibility:

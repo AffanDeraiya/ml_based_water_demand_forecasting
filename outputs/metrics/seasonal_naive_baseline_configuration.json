@@ -1,0 +1,5 @@
+{
+  "model": "SeasonalNaiveBaseline",
+  "seasonal_period": 12,
+  "target": "residential_water_demand_m3"
+}

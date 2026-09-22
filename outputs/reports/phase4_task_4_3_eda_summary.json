@@ -1,0 +1,22 @@
+{
+  "dataset_rows": 180,
+  "date_range": "2010-01 to 2024-12",
+  "demand_mean_m3": 3660509.5594444443,
+  "demand_std_m3": 697758.9487759887,
+  "demand_cv": 0.1906179829460376,
+  "demand_growth_pct": 38.914235356739766,
+  "population_growth_pct": 44.928984872524055,
+  "household_growth_pct": 38.8270669840655,
+  "monsoon_months": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "monsoon_to_dry_rainfall_ratio": 3.6809237153834755,
+  "monsoon_to_dry_humidity_ratio": 1.185773718289593,
+  "monsoon_to_dry_sunshine_ratio": 0.649514644787289,
+  "strongest_positive_driver": "sunshine_hours",
+  "strongest_negative_driver": "humidity_max_pct",
+  "eda_status": "COMPLETE"
+}

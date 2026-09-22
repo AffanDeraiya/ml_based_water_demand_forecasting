@@ -1,0 +1,226 @@
+{
+  "package": "DNH_total monthly forecasting preparation",
+  "generated_at_utc": "2026-09-22T17:22:47.031925+00:00",
+  "status": "READY_FOR_NEXT_PHASE",
+  "missing_artifacts": [],
+  "artifact_count": 41,
+  "artifacts": [
+    {
+      "path": "data/synthetic/raw/synthetic_dnh_total_monthly_v2.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/synthetic/metadata/synthetic_dnh_total_monthly_v2_metadata.json",
+      "exists": true,
+      "kind": "json"
+    },
+    {
+      "path": "outputs/reports/dnh_total_eda_summary.json",
+      "exists": true,
+      "kind": "json"
+    },
+    {
+      "path": "outputs/reports/dnh_total_data_quality_and_realism.md",
+      "exists": true,
+      "kind": "md"
+    },
+    {
+      "path": "outputs/reports/feature_availability_audit.json",
+      "exists": true,
+      "kind": "json"
+    },
+    {
+      "path": "outputs/figures/eda/01_target_demand_trend.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/eda/02_weather_monthly_profiles.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/eda/03_monsoon_dry_comparison.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/eda/04_demographics_and_system_state.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/eda/05_driver_correlations.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/eda/06_lagged_driver_relationships.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/feature_audit/01_features_by_group.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/feature_audit/02_warmup_missingness.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/feature_audit/03_approved_feature_relationships.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "outputs/figures/matrix_splits/01_chronological_split_timeline.png",
+      "exists": true,
+      "kind": "png"
+    },
+    {
+      "path": "data/processed/splits/dnh_total_split_metadata_v1.json",
+      "exists": true,
+      "kind": "json"
+    },
+    {
+      "path": "docs/DATA_CONTRACT.md",
+      "exists": true,
+      "kind": "md"
+    },
+    {
+      "path": "docs/FEATURE_ENGINEERING_SPECIFICATION.md",
+      "exists": true,
+      "kind": "md"
+    },
+    {
+      "path": "docs/FEATURE_MATRIX_AND_SPLIT_SPECIFICATION.md",
+      "exists": true,
+      "kind": "md"
+    },
+    {
+      "path": "notebooks/PHASE_4_TASK_4_3_EDA.ipynb",
+      "exists": true,
+      "kind": "ipynb"
+    },
+    {
+      "path": "notebooks/FEATURE_AVAILABILITY_AND_INCLUSION_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb"
+    },
+    {
+      "path": "notebooks/SHARED_FEATURE_MATRIX_AND_TIME_SPLITS.ipynb",
+      "exists": true,
+      "kind": "ipynb"
+    },
+    {
+      "path": "notebooks/PREPARATION_HANDOFF_REVIEW.ipynb",
+      "exists": true,
+      "kind": "ipynb"
+    },
+    {
+      "path": "src/features/phase4_data_loader.py",
+      "exists": true,
+      "kind": "py"
+    },
+    {
+      "path": "src/features/phase4_feature_engineering.py",
+      "exists": true,
+      "kind": "py"
+    },
+    {
+      "path": "src/features/phase4_dataset_preparation.py",
+      "exists": true,
+      "kind": "py"
+    },
+    {
+      "path": "src/features/phase4_handoff.py",
+      "exists": true,
+      "kind": "py"
+    },
+    {
+      "path": "tests/test_phase4_loading_validation.py",
+      "exists": true,
+      "kind": "py"
+    },
+    {
+      "path": "tests/test_phase4_feature_engineering.py",
+      "exists": true,
+      "kind": "py"
+    },
+    {
+      "path": "tests/test_phase4_dataset_preparation.py",
+      "exists": true,
+      "kind": "py"
+    },
+    {
+      "path": "data/processed/features/dnh_total_monthly_features_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/features/dnh_total_monthly_target_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/splits/train_features_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/splits/train_target_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/splits/train_row_ids_v1.json",
+      "exists": true,
+      "kind": "json"
+    },
+    {
+      "path": "data/processed/splits/validation_features_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/splits/validation_target_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/splits/validation_row_ids_v1.json",
+      "exists": true,
+      "kind": "json"
+    },
+    {
+      "path": "data/processed/splits/test_features_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/splits/test_target_v1.csv",
+      "exists": true,
+      "kind": "csv"
+    },
+    {
+      "path": "data/processed/splits/test_row_ids_v1.json",
+      "exists": true,
+      "kind": "json"
+    }
+  ],
+  "scope": [
+    "validated source data",
+    "EDA and realism findings",
+    "feature availability decisions",
+    "shared feature matrix and target",
+    "chronological train validation test partitions",
+    "reproducibility metadata and row IDs"
+  ],
+  "limitations": [
+    "The data is synthetic and does not represent observed DNH demand.",
+    "Model fitting and final test evaluation have not started."
+  ]
+}

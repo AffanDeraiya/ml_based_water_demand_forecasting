@@ -1,0 +1,43 @@
+{
+  "model": "MLPRegressor",
+  "selected_parameters": {
+    "hidden_layer_sizes": [
+      64
+    ],
+    "learning_rate_init": 0.001,
+    "alpha": 0.0001
+  },
+  "feature_columns": [
+    "month",
+    "quarter",
+    "year",
+    "month_sin",
+    "month_cos",
+    "demand_lag_1",
+    "demand_lag_2",
+    "demand_lag_3",
+    "demand_lag_6",
+    "demand_lag_12",
+    "demand_rolling_mean_3",
+    "demand_rolling_std_3",
+    "demand_rolling_mean_6",
+    "demand_rolling_std_6",
+    "rainfall_mm_lag_1",
+    "temp_max_c_lag_1",
+    "temp_min_c_lag_1",
+    "humidity_max_pct_lag_1",
+    "humidity_min_pct_lag_1",
+    "wind_speed_kmh_lag_1",
+    "solar_radiation_mj_m2_lag_1",
+    "sunshine_hours_lag_1",
+    "reservoir_level_m_lag_1",
+    "canal_discharge_cumecs_lag_1",
+    "groundwater_level_m_bgl_lag_1",
+    "total_population_lag_1",
+    "urban_population_lag_1",
+    "total_households_lag_1"
+  ],
+  "scaling": "training_only",
+  "validation_monitoring": true,
+  "best_iteration": 300
+}
