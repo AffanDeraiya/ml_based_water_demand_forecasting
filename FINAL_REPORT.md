@@ -36,7 +36,7 @@ The chronological partitions are:
 
 No random time-series shuffling is used. The test period is held back for final comparison after validation-based model selection.
 
-The canonical data contract and quality rules are documented in [DATA_CONTRACT.md](DATA_CONTRACT.md). The generated dataset is validated for monthly continuity, DNH-total geography, numeric completeness, physical bounds, positive demand, demographic relationships, state-variable behavior, and configured realism constraints.
+The canonical data contract and quality rules are documented in [DATA_CONTRACT.md](docs/DATA_CONTRACT.md). The generated dataset is validated for monthly continuity, DNH-total geography, numeric completeness, physical bounds, positive demand, demographic relationships, state-variable behavior, and configured realism constraints.
 
 ## 3. Feature Engineering
 
@@ -84,7 +84,7 @@ Relative to the seasonal-naive baseline on test:
 
 The ANN and LSTM rankings were stable between validation and test. Random Forest moved below the seasonal baseline on test, while the seasonal baseline moved above it.
 
-The authoritative values are available in [phase6_scorecard.csv](../outputs/metrics/phase6_scorecard.csv), [phase6_baseline_comparison.csv](../outputs/metrics/phase6_baseline_comparison.csv), and [phase6_selection_review.csv](../outputs/metrics/phase6_selection_review.csv).
+The authoritative values are available in [phase6_scorecard.csv](outputs/metrics/phase6_scorecard.csv), [phase6_baseline_comparison.csv](outputs/metrics/phase6_baseline_comparison.csv), and [phase6_selection_review.csv](outputs/metrics/phase6_selection_review.csv).
 
 ## 6. Forecast Visual Evidence
 
@@ -92,13 +92,13 @@ The following figures are generated from saved predictions and evaluation artifa
 
 ### Observed demand and model forecasts
 
-![Validation forecasts](../outputs/figures/phase6/01_forecast_vs_actual_validation.png)
+![Validation forecasts](outputs/figures/phase6/01_forecast_vs_actual_validation.png)
 
-![Test forecasts](../outputs/figures/phase6/01_forecast_vs_actual_test.png)
+![Test forecasts](outputs/figures/phase6/01_forecast_vs_actual_test.png)
 
 ### Metric comparison
 
-![RMSE comparison](../outputs/figures/phase6/04_metric_comparison.png)
+![RMSE comparison](outputs/figures/phase6/04_metric_comparison.png)
 
 The figures show the relative positioning of the four models against observed demand. They should be read together with the persisted metric files rather than treated as substitutes for numerical evaluation.
 
@@ -110,11 +110,11 @@ The residual results show that model behavior differs by window. The ANN has a n
 
 Residual time-series and distribution figures are available here:
 
-![Residual time series](../outputs/figures/phase6/02_residual_timeseries.png)
+![Residual time series](outputs/figures/phase6/02_residual_timeseries.png)
 
-![Residual distributions](../outputs/figures/phase6/03_residual_distributions.png)
+![Residual distributions](outputs/figures/phase6/03_residual_distributions.png)
 
-Seasonal error summaries and the largest-error months are persisted in [phase6_seasonal_errors.csv](../outputs/reports/phase6_seasonal_errors.csv) and [phase6_large_errors.csv](../outputs/reports/phase6_large_errors.csv).
+Seasonal error summaries and the largest-error months are persisted in [phase6_seasonal_errors.csv](outputs/reports/phase6_seasonal_errors.csv) and [phase6_large_errors.csv](outputs/reports/phase6_large_errors.csv).
 
 ## 8. Short-Horizon Forecasting
 
@@ -124,9 +124,9 @@ The persisted quarterly artifact contains the sum of the three monthly forecasts
 
 The seasonal-naive model has the smallest one-month absolute error in the current horizon example, while its aggregate three-month error remains substantially higher than its first-month error. The ANN has a larger first-month error in this horizon example but remains competitive on aggregate three-month error.
 
-![Sequential horizon forecasts](../outputs/figures/phase6/05_horizon_forecasts.png)
+![Sequential horizon forecasts](outputs/figures/phase6/05_horizon_forecasts.png)
 
-The supporting artifacts are [phase5_horizon_forecasts.csv](../outputs/reports/phase5_horizon_forecasts.csv), [phase5_quarterly_forecasts.csv](../outputs/reports/phase5_quarterly_forecasts.csv), and [phase6_horizon_review.csv](../outputs/metrics/phase6_horizon_review.csv).
+The supporting artifacts are [phase5_horizon_forecasts.csv](outputs/reports/phase5_horizon_forecasts.csv), [phase5_quarterly_forecasts.csv](outputs/reports/phase5_quarterly_forecasts.csv), and [phase6_horizon_review.csv](outputs/metrics/phase6_horizon_review.csv).
 
 ## 9. Exploratory Demand-Regime Analysis
 
@@ -134,16 +134,13 @@ An exploratory K-Means model is fitted to training-period standardized feature i
 
 The selected solution contains two regimes with a training silhouette score of approximately 0.275. Regimes are named using standardized demand level and variability characteristics. The persisted regime artifact includes the scaler and K-Means model as a single pipeline, along with candidate cluster diagnostics, feature metadata, centroids, and assignments.
 
-![Regime sizes](../outputs/figures/phase6/06_regime_sizes.png)
+![Regime sizes](outputs/figures/phase6/06_regime_sizes.png)
 
-![Regime centroids](../outputs/figures/phase6/07_regime_centroids.png)
+![Regime centroids](outputs/figures/phase6/07_regime_centroids.png)
 
-![Regime timeline](../outputs/figures/phase6/08_regime_timeline.png)
+![Regime timeline](outputs/figures/phase6/08_regime_timeline.png)
 
-Regime-specific model errors are available in [phase6_regime_error_summary.csv](../outputs/metrics/phase6_regime_error_summary.csv). These relationships are exploratory and should be independently reassessed with real observations.
-
-## 10. Reproducibility and Quality Controls
-
+Regime-specific model errors are available in [phase6_regime_error_summary.csv](outputs/metrics/phase6_regime_error_summary.csv). These relationships are exploratory and should be independently reassessed with real observations.
 The repository includes:
 
 - Source data and split integrity checks
@@ -153,7 +150,11 @@ The repository includes:
 - Regression tests for data generation, feature engineering, models, horizon forecasting, evaluation, packaging, and regime analysis
 - Presentation notebooks covering data preparation, models, comparison, horizon behavior, and evaluation
 
-The final Phase 6 package is represented by [phase6_artifact_manifest.json](../outputs/reports/phase6_artifact_manifest.json), and its handoff summary is in [phase6_handoff_manifest.md](../outputs/reports/phase6_handoff_manifest.md).
+## 10. Reproducibility and Quality Controls
+
+The repository includes:
+
+
 
 ## 11. Limitations
 

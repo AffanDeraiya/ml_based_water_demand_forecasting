@@ -116,7 +116,7 @@ The scorecard, baseline comparison, residual and uncertainty analysis, horizon r
 
 ### Phase 7 — Reporting: current deliverable
 
-The final academic report is [FINAL_REPORT.md](FINAL_REPORT.md), the browser-ready version is [FINAL_REPORT.html](FINAL_REPORT.html), and the repository navigation guide is [REPOSITORY_WALKTHROUGH.md](REPOSITORY_WALKTHROUGH.md). All claims remain bounded by the synthetic-data limitation.
+The final academic report is [FINAL_REPORT.md](../FINAL_REPORT.md), the browser-ready version is [FINAL_REPORT.html](FINAL_REPORT.html), and the repository navigation guide is [REPOSITORY_WALKTHROUGH.md](../REPOSITORY_WALKTHROUGH.md). All claims remain bounded by the synthetic-data limitation.
 
 ## Project roadmap
 
@@ -137,8 +137,8 @@ When real history becomes available, aggregate it to the canonical DNH-total mon
 
 ## Restart order for a new agent
 
-1. Read this document and [REPOSITORY_WALKTHROUGH.md](REPOSITORY_WALKTHROUGH.md).
+1. Read this document and [REPOSITORY_WALKTHROUGH.md](../REPOSITORY_WALKTHROUGH.md).
 2. Read [DATA_CONTRACT.md](DATA_CONTRACT.md) and [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
 3. Review the implementation under `src/`, the regression tests under `tests/`, and the presentation notebooks under `notebooks/`.
-4. Use [FINAL_REPORT.md](FINAL_REPORT.md) or [FINAL_REPORT.html](FINAL_REPORT.html) for the validated project narrative and results.
+4. Use [FINAL_REPORT.md](../FINAL_REPORT.md) or [FINAL_REPORT.html](FINAL_REPORT.html) for the validated project narrative and results.
 5. Treat the synthetic-data limitation and the unresolved real-data questions as mandatory context for any future extension.

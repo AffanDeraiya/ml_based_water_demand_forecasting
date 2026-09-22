@@ -20,30 +20,14 @@ The current repository contains the completed implementation and the final repor
 
 Read these files first:
 
-- [README.md](../README.md): short setup and reproducibility entry point
-- [FINAL_REPORT.md](FINAL_REPORT.md): academic summary of the problem, methods, results, visuals, and limitations
-- [DATA_CONTRACT.md](DATA_CONTRACT.md): authoritative schema, units, exclusions, and quality rules
-- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md): original project roadmap
-- [DNH_Water_Demand_Forecasting_Knowledge_Transfer.md](DNH_Water_Demand_Forecasting_Knowledge_Transfer.md): project context and design rationale
 
 ## 3. Top-Level Folders
 
 ### `configs/`
 
-Configuration files for deterministic synthetic data generation. The main configuration is [synthetic_dnh_total_v2.json](../configs/synthetic_dnh_total_v2.json).
-
-It defines the date range, random seed, DNH-total geography, weather behavior, demographic growth, demand generation, system-state dynamics, realism settings, and validation thresholds.
-
 ### `data/`
 
 Data at different pipeline stages:
-
-- `data/synthetic/raw/`: generated synthetic canonical data
-- `data/synthetic/metadata/`: generator metadata and provenance
-- `data/processed/features/`: persisted feature matrix and target
-- `data/processed/splits/`: chronological split metadata
-- `data/real/`: reserved location for future confirmed real data
-
 ### `src/`
 
 Reusable implementation modules grouped by responsibility:
@@ -76,20 +60,20 @@ Reader-facing demonstrations and review notebooks. The notebooks are useful for 
 
 ### Data and feature preparation
 
-- [FEATURE_AVAILABILITY_AND_INCLUSION_REVIEW.ipynb](../notebooks/FEATURE_AVAILABILITY_AND_INCLUSION_REVIEW.ipynb): feature availability and inclusion decisions
-- [PHASE_4_TASK_4_3_EDA.ipynb](../notebooks/PHASE_4_TASK_4_3_EDA.ipynb): exploratory analysis of demand, weather, demographics, and system state
-- [SHARED_FEATURE_MATRIX_AND_TIME_SPLITS.ipynb](../notebooks/SHARED_FEATURE_MATRIX_AND_TIME_SPLITS.ipynb): shared predictors, target separation, and chronological partitions
-- [PREPARATION_HANDOFF_REVIEW.ipynb](../notebooks/PREPARATION_HANDOFF_REVIEW.ipynb): preparation outputs and handoff review
+- [FEATURE_AVAILABILITY_AND_INCLUSION_REVIEW.ipynb](notebooks/FEATURE_AVAILABILITY_AND_INCLUSION_REVIEW.ipynb): feature availability and inclusion decisions
+- [PHASE_4_TASK_4_3_EDA.ipynb](notebooks/PHASE_4_TASK_4_3_EDA.ipynb): exploratory analysis of demand, weather, demographics, and system state
+- [SHARED_FEATURE_MATRIX_AND_TIME_SPLITS.ipynb](notebooks/SHARED_FEATURE_MATRIX_AND_TIME_SPLITS.ipynb): shared predictors, target separation, and chronological partitions
+- [PREPARATION_HANDOFF_REVIEW.ipynb](notebooks/PREPARATION_HANDOFF_REVIEW.ipynb): preparation outputs and handoff review
 
 ### Model reviews
 
-- [SEASONAL_NAIVE_BASELINE_REVIEW.ipynb](../notebooks/SEASONAL_NAIVE_BASELINE_REVIEW.ipynb): seasonal reference model
-- [RANDOM_FOREST_FORECAST_REVIEW.ipynb](../notebooks/RANDOM_FOREST_FORECAST_REVIEW.ipynb): Random Forest training and diagnostics
-- [ANN_FORECAST_REVIEW.ipynb](../notebooks/ANN_FORECAST_REVIEW.ipynb): ANN training, tuning, and diagnostics
-- [LSTM_FORECAST_REVIEW.ipynb](../notebooks/LSTM_FORECAST_REVIEW.ipynb): LSTM sequence preparation, training, and diagnostics
-- [PHASE_5_MODEL_COMPARISON_REVIEW.ipynb](../notebooks/PHASE_5_MODEL_COMPARISON_REVIEW.ipynb): common model comparison and residual review
-- [PHASE_5_HORIZON_FORECAST_REVIEW.ipynb](../notebooks/PHASE_5_HORIZON_FORECAST_REVIEW.ipynb): one-month and three-month sequential forecasts
-- [PHASE_6_EVALUATION_REVIEW.ipynb](../notebooks/PHASE_6_EVALUATION_REVIEW.ipynb): final scorecards, residuals, horizon behavior, and demand regimes
+- [SEASONAL_NAIVE_BASELINE_REVIEW.ipynb](notebooks/SEASONAL_NAIVE_BASELINE_REVIEW.ipynb): seasonal reference model
+- [RANDOM_FOREST_FORECAST_REVIEW.ipynb](notebooks/RANDOM_FOREST_FORECAST_REVIEW.ipynb): Random Forest training and diagnostics
+- [ANN_FORECAST_REVIEW.ipynb](notebooks/ANN_FORECAST_REVIEW.ipynb): ANN training, tuning, and diagnostics
+- [LSTM_FORECAST_REVIEW.ipynb](notebooks/LSTM_FORECAST_REVIEW.ipynb): LSTM sequence preparation, training, and diagnostics
+- [PHASE_5_MODEL_COMPARISON_REVIEW.ipynb](notebooks/PHASE_5_MODEL_COMPARISON_REVIEW.ipynb): common model comparison and residual review
+- [PHASE_5_HORIZON_FORECAST_REVIEW.ipynb](notebooks/PHASE_5_HORIZON_FORECAST_REVIEW.ipynb): one-month and three-month sequential forecasts
+- [PHASE_6_EVALUATION_REVIEW.ipynb](notebooks/PHASE_6_EVALUATION_REVIEW.ipynb): final scorecards, residuals, horizon behavior, and demand regimes
 
 ## 5. Important Outputs
 
@@ -211,4 +195,4 @@ A practical code-reading order is:
 
 ## 9. Current Handoff
 
-The completed evaluation package is marked ready for final reporting in [phase6_handoff_manifest.md](../outputs/reports/phase6_handoff_manifest.md). The final academic report is [FINAL_REPORT.md](FINAL_REPORT.md).
+The completed evaluation package is marked ready for final reporting in [phase6_handoff_manifest.md](outputs/reports/phase6_handoff_manifest.md). The final academic report is [FINAL_REPORT.md](FINAL_REPORT.md), and the browser-ready report is [FINAL_REPORT.html](docs/FINAL_REPORT.html).

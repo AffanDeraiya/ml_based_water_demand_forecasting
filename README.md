@@ -55,5 +55,7 @@ See `docs/` for project documentation.
 
 Key reader-facing documents:
 
-- [Final academic report](docs/FINAL_REPORT.md)
-- [Repository walkthrough](docs/REPOSITORY_WALKTHROUGH.md)
+- [Final academic report](FINAL_REPORT.md)
+- [HTML report](docs/FINAL_REPORT.html)
+- [Repository walkthrough](REPOSITORY_WALKTHROUGH.md)
+- [HTML walkthrough](docs/REPOSITORY_WALKTHROUGH.html)
