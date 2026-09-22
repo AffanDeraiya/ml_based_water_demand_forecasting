@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import hashlib
+import importlib.metadata
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -15,10 +17,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from .forecasting_evaluation import compute_regression_metrics, compute_residual_diagnostics, load_phase5_artifacts
 from .model_comparison import DEFAULT_MODEL_RUNS, load_saved_predictions
+from .phase5_handoff import write_phase5_handoff
 
 
 def validate_phase5_inputs(project_root: Path | str = ".") -> dict[str, Any]:
@@ -27,7 +31,8 @@ def validate_phase5_inputs(project_root: Path | str = ".") -> dict[str, Any]:
     manifest_path = root / "outputs" / "reports" / "phase5_artifact_manifest.json"
     handoff_path = root / "outputs" / "reports" / "phase5_handoff_manifest.json"
     horizon_path = root / "outputs" / "reports" / "phase5_horizon_forecasts.csv"
-    for path in (manifest_path, handoff_path, horizon_path):
+    quarterly_path = root / "outputs" / "reports" / "phase5_quarterly_forecasts.csv"
+    for path in (manifest_path, handoff_path, horizon_path, quarterly_path):
         if not path.exists():
             raise FileNotFoundError(f"Required Phase 5 input is missing: {path}")
 
@@ -36,6 +41,7 @@ def validate_phase5_inputs(project_root: Path | str = ".") -> dict[str, Any]:
     artifacts = load_phase5_artifacts(root)
     predictions = load_saved_predictions(root)
     horizon = pd.read_csv(horizon_path)
+    quarterly = pd.read_csv(quarterly_path)
     required_models = {"Seasonal naive", "Random Forest", "ANN", "LSTM"}
     if manifest.get("status") != "READY_FOR_HANDOFF" or manifest.get("missing_artifacts"):
         raise ValueError("Phase 5 artifact manifest is not ready")
@@ -47,6 +53,8 @@ def validate_phase5_inputs(project_root: Path | str = ".") -> dict[str, Any]:
         raise ValueError("Phase 5 split sizes do not match the accepted contract")
     if len(horizon) != 12 or set(horizon["horizon_step"]) != {1, 2, 3}:
         raise ValueError("Phase 5 horizon outputs are incomplete")
+    if len(quarterly) != 4 or set(quarterly["model"]) != required_models:
+        raise ValueError("Phase 5 quarterly outputs are incomplete")
     integrity_issues: list[str] = []
     source_of_truth = handoff.get("source_of_truth", {})
     expected_sources = {
@@ -93,6 +101,7 @@ def validate_phase5_inputs(project_root: Path | str = ".") -> dict[str, Any]:
         "artifacts": artifacts,
         "predictions": predictions,
         "horizon": horizon,
+        "quarterly": quarterly,
         "models": sorted(required_models),
         "integrity_issues": integrity_issues,
         "integrity_checks": {
@@ -247,36 +256,23 @@ def build_phase6_residual_analysis(project_root: Path | str = ".") -> dict[str, 
 
 
 def build_phase6_horizon_review(project_root: Path | str = ".") -> pd.DataFrame:
-    """Summarize one-month and three-month forecast error for each model."""
+    """Summarize one-month error and aggregate three-month error for each model."""
     root = Path(project_root)
     horizon = pd.read_csv(root / "outputs" / "reports" / "phase5_horizon_forecasts.csv")
     rows: list[dict[str, float | str | int]] = []
     for model_name in sorted(horizon["model"].unique()):
-        step_one = horizon[(horizon["model"] == model_name) & (horizon["horizon_step"] == 1)].copy()
-        step_three = horizon[(horizon["model"] == model_name) & (horizon["horizon_step"] == 3)].copy()
-
-        if step_one.empty or step_three.empty:
+        model_horizon = horizon[horizon["model"] == model_name].sort_values("horizon_step")
+        if set(model_horizon["horizon_step"]) != {1, 2, 3}:
             continue
-
-        one_month_error = step_one["actual_m3"] - step_one["forecast_m3"]
-        three_month_error = step_three["actual_m3"] - step_three["forecast_m3"]
-
+        errors = model_horizon["actual_m3"] - model_horizon["forecast_m3"]
         rows.append({
             "model": model_name,
-            "horizon_step": 1,
-            "one_month_absolute_error": float(np.abs(one_month_error.iloc[0])),
-            "three_month_mae": float(np.mean(np.abs(three_month_error))),
-            "three_month_rmse": float(np.sqrt(np.mean(three_month_error.to_numpy() ** 2))),
-        })
-        rows.append({
-            "model": model_name,
-            "horizon_step": 3,
-            "one_month_absolute_error": float(np.abs(one_month_error.iloc[0])),
-            "three_month_mae": float(np.mean(np.abs(three_month_error))),
-            "three_month_rmse": float(np.sqrt(np.mean(three_month_error.to_numpy() ** 2))),
+            "one_month_absolute_error": float(np.abs(errors.iloc[0])),
+            "three_month_mae": float(np.mean(np.abs(errors))),
+            "three_month_rmse": float(np.sqrt(np.mean(errors.to_numpy() ** 2))),
         })
     review = pd.DataFrame(rows)
-    return review.sort_values(["model", "horizon_step"]).reset_index(drop=True)
+    return review.sort_values("model").reset_index(drop=True)
 
 
 def build_phase6_regime_analysis(project_root: Path | str = ".") -> dict[str, Any]:
@@ -307,10 +303,12 @@ def build_phase6_regime_analysis(project_root: Path | str = ".") -> dict[str, An
     best_model: KMeans | None = None
     best_score = -np.inf
     best_k = 2
+    candidate_scores: list[dict[str, float | int]] = []
     for k in candidate_ks:
         model = KMeans(n_clusters=k, random_state=42, n_init=10)
         labels = model.fit_predict(train_scaled)
         score = silhouette_score(train_scaled, labels)
+        candidate_scores.append({"k": int(k), "silhouette_score": float(score), "inertia": float(model.inertia_)})
         if score > best_score:
             best_score = score
             best_k = k
@@ -321,6 +319,25 @@ def build_phase6_regime_analysis(project_root: Path | str = ".") -> dict[str, An
     train_labels = best_model.predict(train_scaled)
     validation_labels = best_model.predict(scaler.transform(validation_X))
     test_labels = best_model.predict(scaler.transform(test_X))
+
+    demand_level_columns = [
+        column for column in feature_columns
+        if column.startswith("demand_lag_") or column.startswith("demand_rolling_mean_")
+    ]
+    variability_columns = [column for column in feature_columns if column.startswith("demand_rolling_std_")]
+    level_indexes = [feature_columns.index(column) for column in demand_level_columns]
+    variability_indexes = [feature_columns.index(column) for column in variability_columns]
+    level_scores = best_model.cluster_centers_[:, level_indexes].mean(axis=1)
+    variability_scores = best_model.cluster_centers_[:, variability_indexes].mean(axis=1)
+    level_median = float(np.median(level_scores))
+    variability_median = float(np.median(variability_scores))
+    regime_names = {
+        cluster: (
+            f"{'higher-demand' if level_scores[cluster] >= level_median else 'lower-demand'} "
+            f"{'variable' if variability_scores[cluster] >= variability_median else 'stable'} months"
+        )
+        for cluster in range(best_k)
+    }
 
     assignments = []
     for dates, split_name, labels in (
@@ -333,6 +350,7 @@ def build_phase6_regime_analysis(project_root: Path | str = ".") -> dict[str, An
                 "date": timestamp.strftime("%Y-%m-%d"),
                 "split": split_name,
                 "cluster": int(cluster),
+                "regime_name": regime_names[int(cluster)],
             })
     assignments_df = pd.DataFrame(assignments).sort_values(["split", "date"]).reset_index(drop=True)
 
@@ -341,11 +359,16 @@ def build_phase6_regime_analysis(project_root: Path | str = ".") -> dict[str, An
         "silhouette_score": float(best_score),
         "scaler": scaler,
         "model": best_model,
+        "pipeline": Pipeline([("scaler", scaler), ("kmeans", best_model)]),
         "assignments": assignments_df,
         "feature_columns": feature_columns,
         "train_shape": train_X.shape,
         "validation_shape": validation_X.shape,
         "test_shape": test_X.shape,
+        "candidate_scores": candidate_scores,
+        "regime_names": regime_names,
+        "scaler_parameters": {"mean": scaler.mean_.tolist(), "scale": scaler.scale_.tolist()},
+        "random_state": 42,
     }
 
 
@@ -368,12 +391,14 @@ def build_phase6_regime_error_summary(project_root: Path | str = ".") -> pd.Data
                 "residual": residual.values,
                 "abs_residual": np.abs(residual.values),
                 "cluster": assignments.loc[target.index, "cluster"].values,
+                "regime_name": assignments.loc[target.index, "regime_name"].values,
             }, index=target.index)
             for cluster, frame in combined.groupby("cluster"):
                 rows.append({
                     "model": model_name,
                     "split": split,
                     "cluster": int(cluster),
+                    "regime_name": str(frame["regime_name"].iloc[0]),
                     "count": int(len(frame)),
                     "bias": float(frame["residual"].mean()),
                     "mae": float(frame["abs_residual"].mean()),
@@ -412,6 +437,8 @@ def save_phase6_evaluation(project_root: Path | str = ".") -> dict[str, Path]:
         "stability": metrics_dir / "phase6_stability_review.csv",
         "regime_assignments": report_dir / "phase6_regime_assignments.csv",
         "regime_error_summary": metrics_dir / "phase6_regime_error_summary.csv",
+        "regime_metadata": metrics_dir / "phase6_regime_metadata.json",
+        "regime_model": root / "outputs" / "models" / "phase6_regime_kmeans.joblib",
     }
 
     scorecard.to_csv(paths["scorecard"], index=False)
@@ -426,6 +453,21 @@ def save_phase6_evaluation(project_root: Path | str = ".") -> dict[str, Path]:
     analysis["stability"].to_csv(paths["stability"], index=False)
     regime_analysis["assignments"].to_csv(paths["regime_assignments"], index=False)
     regime_summary.to_csv(paths["regime_error_summary"], index=False)
+    paths["regime_metadata"].write_text(json.dumps({
+        "selected_k": regime_analysis["selected_k"],
+        "silhouette_score": regime_analysis["silhouette_score"],
+        "candidate_scores": regime_analysis["candidate_scores"],
+        "feature_columns": regime_analysis["feature_columns"],
+        "regime_names": {str(key): value for key, value in regime_analysis["regime_names"].items()},
+        "scaler_parameters": regime_analysis["scaler_parameters"],
+        "train_shape": regime_analysis["train_shape"],
+        "validation_shape": regime_analysis["validation_shape"],
+        "test_shape": regime_analysis["test_shape"],
+        "random_state": regime_analysis["random_state"],
+    }, indent=2))
+    import joblib
+    paths["regime_model"].parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(regime_analysis["pipeline"], paths["regime_model"])
     return paths
 
 
@@ -568,9 +610,24 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _environment_metadata() -> dict[str, Any]:
+    package_names = (
+        "pandas", "numpy", "matplotlib", "pytest", "python-dateutil",
+        "scikit-learn", "torch", "joblib", "nbclient",
+    )
+    packages = {}
+    for name in package_names:
+        try:
+            packages[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            packages[name] = None
+    return {"python": sys.version, "packages": packages}
+
+
 def save_phase6_package(project_root: Path | str = ".") -> dict[str, Path]:
     """Generate the complete Phase 6 evaluation package and Phase 7 handoff."""
     root = Path(project_root)
+    write_phase5_handoff(root)
     inputs = validate_phase5_inputs(root)
     table_paths = save_phase6_evaluation(root)
     scorecard = build_phase6_scorecard(root)
@@ -584,11 +641,15 @@ def save_phase6_package(project_root: Path | str = ".") -> dict[str, Path]:
     centroids.to_csv(centroid_path, index_label="cluster")
 
     package_paths = {**table_paths, **visual_paths, "regime_centroids": centroid_path}
+    environment_path = root / "outputs" / "reports" / "phase6_environment.json"
+    environment_path.write_text(json.dumps(_environment_metadata(), indent=2))
+    package_paths["environment"] = environment_path
     notebook_path = root / "notebooks" / "PHASE_6_EVALUATION_REVIEW.ipynb"
     source_paths = [
         root / "outputs" / "reports" / "phase5_artifact_manifest.json",
         root / "outputs" / "reports" / "phase5_handoff_manifest.json",
         root / "outputs" / "reports" / "phase5_horizon_forecasts.csv",
+        root / "outputs" / "reports" / "phase5_quarterly_forecasts.csv",
         root / "data" / "processed" / "features" / "dnh_total_monthly_features_v1.csv",
         root / "data" / "processed" / "features" / "dnh_total_monthly_target_v1.csv",
         root / "data" / "processed" / "splits" / "dnh_total_split_metadata_v1.json",
@@ -597,6 +658,15 @@ def save_phase6_package(project_root: Path | str = ".") -> dict[str, Path]:
     for label, path in {**package_paths, "notebook": notebook_path}.items():
         if path.exists():
             artifact_entries.append({"name": label, "path": str(path.relative_to(root)), "sha256": _sha256(path), "bytes": path.stat().st_size})
+    source_entries = []
+    for path in source_paths:
+        if not path.exists():
+            raise FileNotFoundError(f"Phase 6 source artifact is missing: {path}")
+        source_entries.append({
+            "path": str(path.relative_to(root)),
+            "sha256": _sha256(path),
+            "bytes": path.stat().st_size,
+        })
     manifest_path = root / "outputs" / "reports" / "phase6_artifact_manifest.json"
     manifest = {
         "package": "DNH_total Phase 6 evaluation package",
@@ -605,6 +675,7 @@ def save_phase6_package(project_root: Path | str = ".") -> dict[str, Path]:
         "source_artifacts": [str(path.relative_to(root)) for path in source_paths],
         "artifact_count": len(artifact_entries),
         "artifacts": artifact_entries,
+        "source_artifacts": source_entries,
         "regime": {"selected_k": regime_analysis["selected_k"], "silhouette_score": regime_analysis["silhouette_score"], "random_state": 42},
         "rebuild_command": ".\\venv\\Scripts\\python.exe -c \"from src.evaluation.phase6_evaluation import save_phase6_package; save_phase6_package('.')\"",
     }
@@ -624,7 +695,7 @@ def save_phase6_package(project_root: Path | str = ".") -> dict[str, Path]:
         "validation_test_rmse_leader_consistent": bool(selection["test_rmse_leader_matches_validation"].iloc[0]),
         "test_set_policy": inputs["handoff"].get("test_set_policy"),
         "regime_summary": {"selected_k": regime_analysis["selected_k"], "silhouette_score": regime_analysis["silhouette_score"]},
-        "horizon_summary": "One-month and three-month sequential forecasts are included; quarterly interpretation remains the sum of monthly forecasts.",
+        "horizon_summary": "One-month and three-month sequential forecasts and persisted quarterly sums are included; no separate quarterly model is fitted.",
         "residual_caveat": "Residual distributions and regime relationships describe this synthetic benchmark and are not operational confidence intervals or causal findings.",
         "baseline_comparison_rows": int(len(baseline)),
         "stable_model_rankings": int(stability["ranking_stable"].sum()),

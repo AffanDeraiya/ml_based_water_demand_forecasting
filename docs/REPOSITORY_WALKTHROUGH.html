@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repository Walkthrough | DNH Water-Demand Forecasting</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --muted: #52606d;
+      --rule: #d9e2ec;
+      --accent: #256d85;
+      --paper: #ffffff;
+      --soft: #f5f7fa;
+      --code: #17212b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #eef1f4;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.62;
+    }
+    main {
+      max-width: 980px;
+      margin: 32px auto;
+      padding: 64px 76px;
+      background: var(--paper);
+    }
+    h1, h2, h3 { color: #163b4d; line-height: 1.2; }
+    h1 { margin: 0 0 12px; font-size: 2.35rem; }
+    h2 {
+      margin-top: 46px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+      font-size: 1.55rem;
+    }
+    h3 { margin-top: 28px; font-size: 1.18rem; }
+    p { margin: 0 0 1rem; }
+    ul, ol { margin: 0 0 1.2rem 1.45rem; padding: 0; }
+    li { margin: 0.28rem 0; }
+    a { color: var(--accent); }
+    code {
+      padding: 0.12em 0.3em;
+      border-radius: 3px;
+      background: var(--soft);
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      overflow-x: auto;
+      margin: 18px 0 24px;
+      padding: 16px 18px;
+      color: #f4f7f9;
+      background: var(--code);
+      border-radius: 4px;
+      font: 0.86rem/1.55 Consolas, "Courier New", monospace;
+      white-space: pre-wrap;
+    }
+    .cover {
+      padding-bottom: 36px;
+      border-bottom: 3px solid var(--accent);
+    }
+    .subtitle { color: var(--muted); font-size: 1.1rem; }
+    .notice {
+      margin: 24px 0;
+      padding: 16px 20px;
+      border-left: 4px solid var(--accent);
+      background: #edf6f8;
+    }
+    .folder {
+      margin: 22px 0;
+      padding: 14px 18px;
+      border: 1px solid var(--rule);
+      background: #fbfcfd;
+      page-break-inside: avoid;
+    }
+    .folder h3 { margin: 0 0 8px; }
+    .footer {
+      margin-top: 52px;
+      padding-top: 12px;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    @media (max-width: 720px) {
+      main { margin: 0; padding: 28px 22px; }
+      h1 { font-size: 1.85rem; }
+    }
+    @media print {
+      @page { size: A4; margin: 18mm 16mm; }
+      body { background: white; }
+      main { max-width: none; margin: 0; padding: 0; }
+      a { color: inherit; text-decoration: none; }
+      .cover { padding-top: 8mm; }
+      h2 { break-after: avoid; }
+      .folder, pre { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="cover">
+    <h1>Repository Walkthrough</h1>
+    <p class="subtitle">Navigation and reproducibility guide for the DNH monthly residential water-demand forecasting project</p>
+  </header>
+
+  <section>
+    <h2>1. Project Purpose</h2>
+    <p>This repository implements a synthetic-first monthly residential water-demand forecasting pipeline for the combined Dadra and Nagar Haveli study area. The approved modelling grain is one row per month for one entity, <code>DNH_total</code>, with residential water demand measured in cubic metres per month.</p>
+    <p>The project is organized as a sequence of validated stages:</p>
+    <ol>
+      <li>Research design and governance</li>
+      <li>Data contract definition</li>
+      <li>Synthetic DNH-total data generation</li>
+      <li>Exploratory analysis and feature engineering</li>
+      <li>Forecasting models and baseline comparison</li>
+      <li>Evaluation, horizon review, and demand-regime analysis</li>
+      <li>Final reporting and reproducibility documentation</li>
+    </ol>
+    <p>The current repository contains the completed implementation and final report materials. Real-data replacement is outside the current synthetic benchmark.</p>
+  </section>
+
+  <section>
+    <h2>2. Start Here</h2>
+    <p>Read these files first:</p>
+    <ul>
+      <li><a href="../README.md">README.md</a>: short setup and reproducibility entry point</li>
+      <li><a href="FINAL_REPORT.md">FINAL_REPORT.md</a>: academic summary of the problem, methods, results, visuals, and limitations</li>
+      <li><a href="FINAL_REPORT.html">FINAL_REPORT.html</a>: browser-ready report with print styling</li>
+      <li><a href="DATA_CONTRACT.md">DATA_CONTRACT.md</a>: authoritative schema, units, exclusions, and quality rules</li>
+      <li><a href="IMPLEMENTATION_PLAN.md">IMPLEMENTATION_PLAN.md</a>: original project roadmap</li>
+      <li><a href="DNH_Water_Demand_Forecasting_Knowledge_Transfer.md">DNH_Water_Demand_Forecasting_Knowledge_Transfer.md</a>: project context and design rationale</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. Top-Level Folders</h2>
+    <div class="folder"><h3><code>configs/</code></h3><p>Configuration files for deterministic synthetic data generation. The main configuration is <a href="../configs/synthetic_dnh_total_v2.json">synthetic_dnh_total_v2.json</a>. It defines the date range, random seed, geography, weather behavior, demographic growth, demand generation, system-state dynamics, realism settings, and validation thresholds.</p></div>
+    <div class="folder"><h3><code>data/</code></h3><ul><li><code>data/synthetic/raw/</code>: generated synthetic canonical data</li><li><code>data/synthetic/metadata/</code>: generator metadata and provenance</li><li><code>data/processed/features/</code>: persisted feature matrix and target</li><li><code>data/processed/splits/</code>: chronological split metadata</li><li><code>data/real/</code>: reserved location for future confirmed real data</li></ul></div>
+    <div class="folder"><h3><code>src/</code></h3><ul><li><code>src/data_generation/</code>: synthetic generator and CLI</li><li><code>src/validation/</code>: schema, domain, chronology, and realism validation</li><li><code>src/features/</code>: loading, feature engineering, shared matrix preparation, and splits</li><li><code>src/models/</code>: seasonal-naive, Random Forest, ANN, and LSTM implementations</li><li><code>src/evaluation/</code>: metrics, comparisons, horizon forecasts, handoffs, and Phase 6 packaging</li><li><code>src/clustering/</code>, <code>src/preprocessing/</code>, and <code>src/utils/</code>: supporting utilities</li></ul></div>
+    <div class="folder"><h3><code>tests/</code></h3><p>Regression coverage for synthetic data, feature engineering, chronological preparation, all forecasting models, horizon forecasts, packaging, evaluation, manifests, and demand regimes.</p></div>
+    <div class="folder"><h3><code>notebooks/</code></h3><p>Reader-facing demonstrations and review notebooks. The reusable Python modules remain the source of truth for computation.</p></div>
+  </section>
+
+  <section>
+    <h2>4. Notebook Guide</h2>
+    <h3>Data and feature preparation</h3>
+    <ul>
+      <li><a href="../notebooks/FEATURE_AVAILABILITY_AND_INCLUSION_REVIEW.ipynb">FEATURE_AVAILABILITY_AND_INCLUSION_REVIEW.ipynb</a>: feature availability and inclusion decisions</li>
+      <li><a href="../notebooks/PHASE_4_TASK_4_3_EDA.ipynb">PHASE_4_TASK_4_3_EDA.ipynb</a>: exploratory analysis of demand, weather, demographics, and system state</li>
+      <li><a href="../notebooks/SHARED_FEATURE_MATRIX_AND_TIME_SPLITS.ipynb">SHARED_FEATURE_MATRIX_AND_TIME_SPLITS.ipynb</a>: shared predictors, target separation, and chronological partitions</li>
+      <li><a href="../notebooks/PREPARATION_HANDOFF_REVIEW.ipynb">PREPARATION_HANDOFF_REVIEW.ipynb</a>: preparation outputs and handoff review</li>
+    </ul>
+    <h3>Model reviews</h3>
+    <ul>
+      <li><a href="../notebooks/SEASONAL_NAIVE_BASELINE_REVIEW.ipynb">SEASONAL_NAIVE_BASELINE_REVIEW.ipynb</a>: seasonal reference model</li>
+      <li><a href="../notebooks/RANDOM_FOREST_FORECAST_REVIEW.ipynb">RANDOM_FOREST_FORECAST_REVIEW.ipynb</a>: Random Forest training and diagnostics</li>
+      <li><a href="../notebooks/ANN_FORECAST_REVIEW.ipynb">ANN_FORECAST_REVIEW.ipynb</a>: ANN training, tuning, and diagnostics</li>
+      <li><a href="../notebooks/LSTM_FORECAST_REVIEW.ipynb">LSTM_FORECAST_REVIEW.ipynb</a>: LSTM sequence preparation, training, and diagnostics</li>
+      <li><a href="../notebooks/PHASE_5_MODEL_COMPARISON_REVIEW.ipynb">PHASE_5_MODEL_COMPARISON_REVIEW.ipynb</a>: common model comparison and residual review</li>
+      <li><a href="../notebooks/PHASE_5_HORIZON_FORECAST_REVIEW.ipynb">PHASE_5_HORIZON_FORECAST_REVIEW.ipynb</a>: one-month and three-month sequential forecasts</li>
+      <li><a href="../notebooks/PHASE_6_EVALUATION_REVIEW.ipynb">PHASE_6_EVALUATION_REVIEW.ipynb</a>: final scorecards, residuals, horizon behavior, and demand regimes</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5. Important Outputs</h2>
+    <h3>Processed data</h3>
+    <ul>
+      <li><code>data/processed/features/dnh_total_monthly_features_v1.csv</code></li>
+      <li><code>data/processed/features/dnh_total_monthly_target_v1.csv</code></li>
+      <li><code>data/processed/splits/dnh_total_split_metadata_v1.json</code></li>
+    </ul>
+    <h3>Horizon outputs</h3>
+    <ul>
+      <li><code>outputs/reports/phase5_horizon_forecasts.csv</code>: three sequential monthly forecasts per model</li>
+      <li><code>outputs/reports/phase5_quarterly_forecasts.csv</code>: summed three-month forecast and actual totals per model</li>
+      <li><code>outputs/metrics/phase5_horizon_metrics.json</code>: horizon error summaries</li>
+      <li><code>outputs/metrics/phase6_horizon_review.csv</code>: one-month versus aggregate three-month review</li>
+    </ul>
+    <h3>Evaluation outputs</h3>
+    <ul>
+      <li><code>outputs/metrics/phase6_scorecard.csv</code>: validation and test metrics</li>
+      <li><code>outputs/metrics/phase6_baseline_comparison.csv</code>: model differences against seasonal naive</li>
+      <li><code>outputs/metrics/phase6_residual_diagnostics.csv</code>: residual summaries</li>
+      <li><code>outputs/reports/phase6_seasonal_errors.csv</code>: calendar-month error summaries</li>
+      <li><code>outputs/reports/phase6_large_errors.csv</code>: largest-error months</li>
+      <li><code>outputs/metrics/phase6_stability_review.csv</code>: validation/test ranking stability</li>
+      <li><code>outputs/reports/phase6_regime_assignments.csv</code>: monthly regime labels</li>
+      <li><code>outputs/metrics/phase6_regime_metadata.json</code>: scaler, features, cluster selection, and names</li>
+      <li><code>outputs/models/phase6_regime_kmeans.joblib</code>: persisted scaler-plus-K-Means pipeline</li>
+    </ul>
+    <h3>Figures</h3>
+    <p>Phase 6 figures are under <code>outputs/figures/phase6/</code>: forecast comparisons, residual plots, RMSE comparison, sequential horizon forecasts, and regime visualizations.</p>
+  </section>
+
+  <section>
+    <h2>6. Reproducibility Sequence on Windows</h2>
+    <p>Run commands from the repository root in PowerShell.</p>
+    <h3>Install the validated environment</h3>
+    <pre>.\venv\Scripts\python.exe -m pip install -r requirements-lock.txt</pre>
+    <h3>Generate and validate synthetic data</h3>
+    <pre>.\venv\Scripts\python.exe -m src.data_generation.generate_synthetic_dnh_total --config configs/synthetic_dnh_total_v2.json</pre>
+    <h3>Run the complete test suite</h3>
+    <pre>.\venv\Scripts\python.exe -m pytest -q</pre>
+    <h3>Execute notebooks into a temporary directory</h3>
+    <pre>$validationDir = Join-Path $env:TEMP 'ml_based_irrigation_notebook_validation'
+New-Item -ItemType Directory -Force -Path $validationDir | Out-Null
+foreach ($notebook in Get-ChildItem notebooks\*.ipynb) {
+    $output = Join-Path $validationDir ($notebook.BaseName + '_executed.ipynb')
+    .\venv\Scripts\python.exe -m jupyter execute $notebook.FullName --output $output --timeout=240
+}</pre>
+    <h3>Regenerate the Phase 5 package</h3>
+    <pre>.\venv\Scripts\python.exe scripts\package_phase5.py
+.\venv\Scripts\python.exe -c "from src.evaluation.horizon_forecasting import save_horizon_forecasts; save_horizon_forecasts('.')"</pre>
+    <h3>Regenerate the Phase 6 package last</h3>
+    <pre>.\venv\Scripts\python.exe -c "from src.evaluation.phase6_evaluation import save_phase6_package; save_phase6_package('.')"</pre>
+    <p>The Phase 6 package refreshes the Phase 5 handoff before checksumming the final evaluation package. Run it after any command that rewrites forecasts, metrics, reports, or model artifacts.</p>
+  </section>
+
+  <section>
+    <h2>7. How to Read the Implementation</h2>
+    <ol>
+      <li>Read the data contract and configuration.</li>
+      <li>Read the synthetic generator and validator.</li>
+      <li>Read the Phase 4 loader, feature engineering, and dataset preparation modules.</li>
+      <li>Read the four model modules under <code>src/models/</code>.</li>
+      <li>Read the common evaluation and model-comparison modules.</li>
+      <li>Read the horizon forecasting module for recursive forecasts and quarterly sums.</li>
+      <li>Read the Phase 6 evaluator for scorecards, residual analysis, regimes, visuals, manifests, and handoff.</li>
+      <li>Use the tests to see intended contracts and failure behavior.</li>
+      <li>Use the notebooks to see the workflow presented visually.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>8. Interpretation Rules</h2>
+    <ul>
+      <li>Synthetic benchmark performance is not operational accuracy.</li>
+      <li>Validation and test windows are chronological and must remain untouched by later tuning.</li>
+      <li>K-Means regimes describe exploratory monthly behavior, not geography.</li>
+      <li>Quarterly values are sums of sequential monthly forecasts, not predictions from a separate quarterly model.</li>
+      <li>Residual quantiles are descriptive error summaries, not confidence intervals.</li>
+      <li>Real-data replacement requires renewed validation, feature-availability review, model selection, and evaluation.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>9. Current Handoff</h2>
+    <p>The completed evaluation package is marked ready for final reporting in <a href="../outputs/reports/phase6_handoff_manifest.md">phase6_handoff_manifest.md</a>. The final academic report is <a href="FINAL_REPORT.md">FINAL_REPORT.md</a>, and the browser-ready report is <a href="FINAL_REPORT.html">FINAL_REPORT.html</a>.</p>
+  </section>
+
+  <footer class="footer">Source guide: <a href="REPOSITORY_WALKTHROUGH.md">REPOSITORY_WALKTHROUGH.md</a> | Final report: <a href="FINAL_REPORT.html">FINAL_REPORT.html</a></footer>
+</main>
+</body>
+</html>

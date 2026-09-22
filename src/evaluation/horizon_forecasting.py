@@ -184,12 +184,26 @@ def save_horizon_forecasts(project_root: Path | str = ".", *, horizon: int = 3) 
     metrics_path = metrics_dir / "phase5_horizon_metrics.json"
     table.to_csv(forecast_path, index=False)
     metrics = {}
+    quarterly_rows = []
     for model, group in table.groupby("model"):
+        group = group.sort_values("horizon_step")
         errors = group["actual_m3"] - group["forecast_m3"]
+        quarterly_rows.append({
+            "model": model,
+            "forecast_origin": group["forecast_origin"].iloc[0],
+            "quarterly_forecast_m3": float(group["forecast_m3"].sum()),
+            "quarterly_actual_m3": float(group["actual_m3"].sum()),
+            "quarterly_error_m3": float(errors.sum()),
+        })
         metrics[model] = {
             "one_month_absolute_error": float(abs(errors.iloc[0])),
             "three_month_mae": float(errors.abs().mean()),
             "three_month_rmse": float(np.sqrt(np.mean(errors.to_numpy() ** 2))),
+            "quarterly_forecast_m3": float(group["forecast_m3"].sum()),
+            "quarterly_actual_m3": float(group["actual_m3"].sum()),
+            "quarterly_error_m3": float(errors.sum()),
         }
+    quarterly_path = report_dir / "phase5_quarterly_forecasts.csv"
+    pd.DataFrame(quarterly_rows).to_csv(quarterly_path, index=False)
     metrics_path.write_text(json.dumps(metrics, indent=2))
-    return {"forecasts": forecast_path, "metrics": metrics_path}
+    return {"forecasts": forecast_path, "metrics": metrics_path, "quarterly_forecasts": quarterly_path}

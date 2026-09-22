@@ -452,6 +452,39 @@ def test_generator_supports_configurable_periods(config):
     assert pd.to_datetime(df["date"]).min() == pd.Timestamp("2020-01-01")
     assert pd.to_datetime(df["date"]).max() == pd.Timestamp("2020-12-01")
 
+    validation = validate_dnh_total_dataset(df, custom)
+    assert validation["ok"] is True, validation["errors"]
+
+
+def test_validator_rejects_direct_state_copy(config):
+    gen = SyntheticDNHTotalGenerator(config)
+    df = gen.generate_all()
+    df["canal_discharge_cumecs"] = df["rainfall_mm"]
+
+    result = validate_dnh_total_dataset(df, config)
+    assert result["ok"] is False
+    assert any("direct copy" in error for error in result["errors"])
+
+
+def test_validator_rejects_extreme_demand_jump(config):
+    gen = SyntheticDNHTotalGenerator(config)
+    df = gen.generate_all()
+    df.loc[1, "residential_water_demand_m3"] = df.loc[0, "residential_water_demand_m3"] * 10
+
+    result = validate_dnh_total_dataset(df, config)
+    assert result["ok"] is False
+    assert any("Demand month-to-month ratio" in error for error in result["errors"])
+
+
+def test_validator_rejects_constant_canal_discharge(config):
+    gen = SyntheticDNHTotalGenerator(config)
+    df = gen.generate_all()
+    df["canal_discharge_cumecs"] = 2.5
+
+    result = validate_dnh_total_dataset(df, config)
+    assert result["ok"] is False
+    assert any("Canal" in error for error in result["errors"])
+
 
 def test_state_variables_saturate_at_bounds(config):
     """Test that state variables remain clipped within configured bounds."""

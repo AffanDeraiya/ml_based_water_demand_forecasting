@@ -16,11 +16,11 @@ Deliverable: [DATA_CONTRACT.md](DATA_CONTRACT.md).
 
 It defines the 17-column monthly DNH-total canonical dataset, source-to-month aggregation rules, exclusions, quality gates, and the real-data replacement path.
 
-## Phase 3 — Synthetic data generation — ready to implement
+## Phase 3 — Synthetic data generation — complete
 
 Deliverable: a validated, reproducible 15-year / 180-row monthly DNH-total dataset, its metadata, generator code, configuration, and automated tests.
 
-The detailed, self-contained build specification is [PHASE_3_SYNTHETIC_DATA_GENERATION.md](PHASE_3_SYNTHETIC_DATA_GENERATION.md). It replaces the previous zone-level generator specification. Implement the Version 2 generator and validate it before feature engineering begins.
+The detailed, self-contained build specification is [PHASE_3_SYNTHETIC_DATA_GENERATION.md](PHASE_3_SYNTHETIC_DATA_GENERATION.md). It replaced the previous zone-level generator specification. The Version 2 generator, configurable validator, metadata, and automated tests are implemented and validated before feature engineering.
 
 ## Phase 4 — Exploratory data analysis and feature engineering
 

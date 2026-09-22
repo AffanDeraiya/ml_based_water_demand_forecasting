@@ -84,8 +84,13 @@ def phase5_artifact_paths(project_root: Path | str = ".") -> list[str]:
     }.items():
         folder = root / directory
         for pattern in patterns:
-            paths.extend(str(path.relative_to(root)).replace("\\", "/") for path in folder.glob(pattern))
-    return sorted(set(paths))
+            for path in folder.glob(pattern):
+                relative_path = str(path.relative_to(root)).replace("\\", "/")
+                if directory == "outputs/metrics" and Path(relative_path).name.startswith("phase6_"):
+                    continue
+                paths.append(relative_path)
+    manifest_path = "outputs/reports/phase5_artifact_manifest.json"
+    return sorted(path for path in set(paths) if path != manifest_path)
 
 
 def build_phase5_artifact_manifest(project_root: Path | str = ".") -> dict[str, Any]:
@@ -105,9 +110,11 @@ def build_phase5_artifact_manifest(project_root: Path | str = ".") -> dict[str, 
             "target": "data/processed/features/dnh_total_monthly_target_v1.csv",
             "split_metadata": "data/processed/splits/dnh_total_split_metadata_v1.json",
         },
+        "quarterly_forecast_artifact": "outputs/reports/phase5_quarterly_forecasts.csv",
         "chronological_splits": {"train_months": 108, "validation_months": 24, "test_months": 36},
         "regeneration_command": ".\\venv\\Scripts\\python.exe scripts\\package_phase5.py",
         "test_command": ".\\venv\\Scripts\\python.exe -m pytest -q",
+        "checksum_scope": "The manifest is excluded from its own artifact list because a file cannot contain its final checksum before it is written.",
     }
 
 

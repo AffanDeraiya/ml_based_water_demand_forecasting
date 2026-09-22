@@ -69,3 +69,12 @@ def test_validate_dnh_total_dataframe_rejects_invalid_input():
 
     with pytest.raises(ValueError, match="null|non-finite|Missing|required"):
         validate_dnh_total_dataframe(bad)
+
+
+def test_validate_dnh_total_dataframe_rejects_out_of_order_dates():
+    config = json.loads(Path("configs/synthetic_dnh_total_v2.json").read_text())
+    frame = pd.read_csv(config["output_csv"])
+    shuffled = pd.concat([frame.iloc[[1]], frame.iloc[[0]], frame.iloc[2:]], ignore_index=True)
+
+    with pytest.raises(ValueError, match="chronologically"):
+        validate_dnh_total_dataframe(shuffled, config=config)

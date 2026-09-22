@@ -2,10 +2,12 @@ from pathlib import Path
 
 import joblib
 import numpy as np
+import pandas as pd
 
 from src.evaluation.horizon_forecasting import (
     build_all_model_horizon_forecasts,
     build_horizon_forecast_table,
+    save_horizon_forecasts,
 )
 
 
@@ -37,3 +39,13 @@ def test_all_four_models_generate_horizon_forecasts():
         "Seasonal naive": 3,
     }
     assert np.isfinite(forecasts["forecast_m3"]).all()
+
+
+def test_horizon_persists_quarterly_totals():
+    paths = save_horizon_forecasts(PROJECT_ROOT)
+    quarterly = pd.read_csv(paths["quarterly_forecasts"])
+
+    assert len(quarterly) == 4
+    assert set(quarterly["model"]) == {"Seasonal naive", "Random Forest", "ANN", "LSTM"}
+    assert np.isfinite(quarterly["quarterly_forecast_m3"]).all()
+    assert np.isfinite(quarterly["quarterly_actual_m3"]).all()

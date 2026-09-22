@@ -23,6 +23,7 @@ def test_phase5_inputs_are_ready_for_phase6():
 
     assert inputs["models"] == ["ANN", "LSTM", "Random Forest", "Seasonal naive"]
     assert len(inputs["horizon"]) == 12
+    assert len(inputs["quarterly"]) == 4
     assert inputs["integrity_issues"] == []
     assert all(inputs["integrity_checks"].values())
 
@@ -66,20 +67,28 @@ def test_phase6_final_package_contains_visuals_and_phase7_handoff():
 
     assert manifest["status"] == "READY_FOR_PHASE_7"
     assert manifest["artifact_count"] >= 20
+    assert len(manifest["source_artifacts"]) == 7
+    assert all(item["sha256"] for item in manifest["source_artifacts"])
     assert handoff["status"] == "READY_FOR_PHASE_7"
     assert handoff["phase7_ready"] is True
     assert paths["handoff_markdown"].exists()
     assert (PROJECT_ROOT / "outputs" / "figures" / "phase6" / "08_regime_timeline.png").exists()
     assert (PROJECT_ROOT / "outputs" / "reports" / "phase6_regime_centroids.csv").exists()
+    assert paths["regime_metadata"].exists()
+    assert paths["regime_model"].exists()
+    import joblib
+    persisted_regime = joblib.load(paths["regime_model"])
+    assert set(persisted_regime.named_steps) == {"scaler", "kmeans"}
 
 
 def test_phase6_horizon_review_summarizes_short_horizon_performance():
     summary = build_phase6_horizon_review(PROJECT_ROOT)
 
     assert set(summary["model"]) == {"ANN", "LSTM", "Random Forest", "Seasonal naive"}
-    assert set(summary["horizon_step"]) == {1, 3}
+    assert len(summary) == 4
     assert summary["one_month_absolute_error"].notna().all()
     assert summary["three_month_mae"].notna().all()
+    assert (summary["three_month_mae"] >= summary["one_month_absolute_error"]).all()
 
 
 def test_phase6_regime_analysis_uses_training_only_scaling_and_assigns_all_periods():
@@ -89,6 +98,10 @@ def test_phase6_regime_analysis_uses_training_only_scaling_and_assigns_all_perio
     assert len(regimes["assignments"]) == 168
     assert set(regimes["assignments"]["split"]) == {"train", "validation", "test"}
     assert set(regimes["assignments"]["cluster"]) == set(range(regimes["selected_k"]))
+    assert regimes["assignments"]["regime_name"].notna().all()
+    assert len(regimes["candidate_scores"]) == 5
+    assert len(regimes["scaler_parameters"]["mean"]) == len(regimes["feature_columns"])
+    assert set(regimes["pipeline"].named_steps) == {"scaler", "kmeans"}
 
 
 def test_phase6_regime_error_summary_is_available_by_model_and_cluster():

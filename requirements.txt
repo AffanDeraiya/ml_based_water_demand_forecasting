@@ -5,3 +5,7 @@ pytest>=8.0.0
 python-dateutil>=2.8.2
 scikit-learn>=1.4.0
 torch>=2.5.0
+joblib>=1.4.0
+jupyter-core>=5.9.0
+ipykernel>=6.29.0
+nbclient>=0.10.0

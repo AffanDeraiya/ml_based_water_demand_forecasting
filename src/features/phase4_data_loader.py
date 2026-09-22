@@ -94,13 +94,13 @@ def validate_dnh_total_dataframe(df: pd.DataFrame, *, config: Optional[Dict[str,
         raise ValueError(f"Missing required columns: {missing}")
 
     data = df.copy()
-    data = data.sort_values("date").reset_index(drop=True)
     data["date"] = pd.to_datetime(data["date"], errors="raise")
 
     if data["date"].duplicated().any():
         raise ValueError("Column 'date' contains duplicate values.")
     if not data["date"].is_monotonic_increasing:
         raise ValueError("Column 'date' must be sorted chronologically.")
+    data = data.reset_index(drop=True)
 
     if not (data["area_id"] == "DNH_total").all():
         raise ValueError("All rows must have area_id == 'DNH_total'.")
@@ -187,6 +187,8 @@ def load_dnh_total_dataset(
         config = json.loads(config_file.read_text())
 
     dataset_path = Path(config["output_csv"])
+    if not dataset_path.is_absolute():
+        dataset_path = config_file.parent.parent / dataset_path
     if not dataset_path.exists():
         raise FileNotFoundError(f"Dataset file not found: {dataset_path}")
 

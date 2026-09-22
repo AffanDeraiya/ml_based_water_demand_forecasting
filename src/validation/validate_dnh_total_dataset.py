@@ -40,9 +40,12 @@ def validate_dnh_total_dataset(df: pd.DataFrame, config: Optional[Dict] = None) 
     if actual_cols != required_cols:
         errors.append(f"Column order mismatch. Expected: {required_cols}")
 
-    # Check row count (should be 180 for 15 years)
-    if len(df) != 180:
-        errors.append(f"Expected 180 rows (15 years), got {len(df)}")
+    # Check row count against the configured period when available.
+    expected_periods = None
+    if config is not None:
+        expected_periods = config.get("periods", config.get("dates", {}).get("periods"))
+    if expected_periods is not None and len(df) != int(expected_periods):
+        errors.append(f"Expected {int(expected_periods)} rows, got {len(df)}")
 
     # Check area_id
     if not (df["area_id"] == "DNH_total").all():
@@ -190,6 +193,11 @@ def validate_dnh_total_dataset(df: pd.DataFrame, config: Optional[Dict] = None) 
                 errors.append(
                     f"Population has month-to-month changes exceeding {max_tolerance*100:.1f}%"
                 )
+            household_pct_change = df["total_households"].pct_change().abs()
+            if (household_pct_change > max_tolerance).any():
+                errors.append(
+                    f"Households have month-to-month changes exceeding {max_tolerance*100:.1f}%"
+                )
         except Exception:
             pass
 
@@ -205,6 +213,16 @@ def validate_dnh_total_dataset(df: pd.DataFrame, config: Optional[Dict] = None) 
         except Exception:
             pass
 
+        try:
+            demand_shock_range = config.get("realism", {}).get("demand_shock_range", [0.82, 1.25])
+            demand_ratio = df["residential_water_demand_m3"].iloc[1:].to_numpy() / df["residential_water_demand_m3"].iloc[:-1].to_numpy()
+            min_ratio = float(demand_shock_range[0]) * 0.5
+            max_ratio = float(demand_shock_range[1]) * 1.5
+            if ((demand_ratio < min_ratio) | (demand_ratio > max_ratio)).any():
+                errors.append(f"Demand month-to-month ratio must remain within [{min_ratio:.2f}, {max_ratio:.2f}]")
+        except Exception:
+            pass
+
     # Demand should have non-zero variance
     if df["residential_water_demand_m3"].std() == 0:
         errors.append("Demand must have non-zero variance")
@@ -214,6 +232,14 @@ def validate_dnh_total_dataset(df: pd.DataFrame, config: Optional[Dict] = None) 
         errors.append("Reservoir level must have non-zero variance")
     if df["groundwater_level_m_bgl"].std() == 0:
         errors.append("Groundwater level must have non-zero variance")
+
+    for state_column in ("reservoir_level_m", "groundwater_level_m_bgl", "canal_discharge_cumecs"):
+        if df[state_column].std() == 0:
+            label = "Canal discharge" if state_column == "canal_discharge_cumecs" else state_column
+            errors.append(f"{label} must have non-zero variance")
+        for source_column in ("rainfall_mm", "residential_water_demand_m3"):
+            if np.array_equal(df[state_column].to_numpy(), df[source_column].to_numpy()):
+                errors.append(f"{state_column} must not be a direct copy of {source_column}")
 
     # Respect configured state bounds when available.
     if config is not None:
@@ -241,9 +267,18 @@ def validate_dnh_total_dataset(df: pd.DataFrame, config: Optional[Dict] = None) 
             monsoon_canal = df_check[df_check["month"].isin(monsoon_months)]["canal_discharge_cumecs"].mean()
             dry_canal = df_check[~df_check["month"].isin(monsoon_months)]["canal_discharge_cumecs"].mean()
 
-            if monsoon_canal > 0 and dry_canal > 0:
-                if monsoon_canal == dry_canal:
-                    errors.append("Canal discharge must have seasonal variation")
+            if monsoon_canal <= 0 or dry_canal <= 0:
+                errors.append("Canal discharge must have positive monsoon and dry-season means")
+            else:
+                expected_ratio = float(
+                    config["system_state"]["canal_discharge"]["seasonal_variation"]["monsoon_multiplier"]
+                    / config["system_state"]["canal_discharge"]["seasonal_variation"]["dry_multiplier"]
+                )
+                observed_ratio = monsoon_canal / dry_canal
+                if not 0.5 * expected_ratio <= observed_ratio <= 1.5 * expected_ratio:
+                    errors.append(
+                        f"Canal seasonal ratio {observed_ratio:.2f} is inconsistent with expected {expected_ratio:.2f}"
+                    )
 
         except Exception:
             pass

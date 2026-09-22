@@ -96,21 +96,37 @@ The standalone build instructions, tests, validation rules, file locations, meta
 
 [DATA_CONTRACT.md](DATA_CONTRACT.md) fixes the Version 2 monthly DNH-total schema, units, source-mapping guidance, exclusions, and quality rules. This is the implementation contract for every Phase 3 output.
 
-### Phase 3 — Synthetic generator code rework: next
+### Phase 3 — Synthetic generator: complete
 
-The next logical task is to replace the earlier zone-level generator path with the Version 2 DNH-total generator described in [PHASE_3_SYNTHETIC_DATA_GENERATION.md](PHASE_3_SYNTHETIC_DATA_GENERATION.md). It must produce the canonical CSV, metadata, reusable validator, configuration, and automated tests before Phase 4 begins.
+The Version 2 DNH-total generator, configurable validator, canonical CSV, metadata, configuration, and automated tests are implemented and validated. The earlier zone-level generator design remains historical context only.
 
-Do not begin modelling or feature engineering until Phase 3 passes its acceptance checklist.
+The generated data has been consumed by the completed Phase 4 feature-engineering workflow and the later forecasting and evaluation stages.
+
+### Phase 4 — Feature engineering and exploratory analysis: complete
+
+The validated synthetic dataset has been transformed into a leakage-safe shared feature matrix with chronological train, validation, and test splits. EDA, feature availability review, and preparation handoff artifacts are present.
+
+### Phase 5 — Forecasting models: complete
+
+The seasonal-naive baseline, Random Forest, ANN, LSTM, saved predictions, diagnostics, model comparison outputs, sequential horizon forecasts, quarterly sums, and Phase 5 handoff are complete.
+
+### Phase 6 — Evaluation and demand regimes: complete
+
+The scorecard, baseline comparison, residual and uncertainty analysis, horizon review, leakage-safe exploratory demand regimes, regime-specific errors, visuals, checksummed package, and handoff artifacts are complete.
+
+### Phase 7 — Reporting: current deliverable
+
+The final academic report is [FINAL_REPORT.md](FINAL_REPORT.md), the browser-ready version is [FINAL_REPORT.html](FINAL_REPORT.html), and the repository navigation guide is [REPOSITORY_WALKTHROUGH.md](REPOSITORY_WALKTHROUGH.md). All claims remain bounded by the synthetic-data limitation.
 
 ## Project roadmap
 
 1. **Phase 1 — Research design:** complete.
 2. **Phase 2 — Data contract:** complete.
-3. **Phase 3 — Synthetic generation:** implement and validate the Version 2 DNH-total generator.
-4. **Phase 4 — EDA and feature engineering:** validate data again, explore patterns, create leakage-safe calendar and lag features, and create chronological splits.
-5. **Phase 5 — Forecasting models:** baseline, Random Forest, ANN, LSTM, monthly forecasts, and sequential quarterly aggregation.
-6. **Phase 6 — Evaluation and demand-regime analysis:** compare models and conduct supplementary K-Means demand-regime exploration.
-7. **Phase 7 — Reporting and reproducibility:** figures, runbook, report, configuration/version recording.
+3. **Phase 3 — Synthetic generation:** complete; the Version 2 DNH-total generator and validation package are implemented.
+4. **Phase 4 — EDA and feature engineering:** complete; leakage-safe features and chronological splits are persisted.
+5. **Phase 5 — Forecasting models:** complete; baseline, Random Forest, ANN, LSTM, monthly forecasts, and sequential quarterly aggregation are persisted.
+6. **Phase 6 — Evaluation and demand-regime analysis:** complete; model comparison, residual analysis, horizon review, and supplementary K-Means regime exploration are packaged.
+7. **Phase 7 — Reporting and reproducibility:** report, HTML presentation, walkthrough, figures, and provenance artifacts are complete for the synthetic benchmark.
 8. **Phase 8 — Real-data replacement:** ingest actual data through the contract and rerun the full pipeline/evaluation.
 
 The phase deliverables and controls are in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
@@ -121,8 +137,8 @@ When real history becomes available, aggregate it to the canonical DNH-total mon
 
 ## Restart order for a new agent
 
-1. Read this document.
-2. Read [DATA_CONTRACT.md](DATA_CONTRACT.md) and [PHASE_3_SYNTHETIC_DATA_GENERATION.md](PHASE_3_SYNTHETIC_DATA_GENERATION.md).
-3. Inspect the repository without relying on obsolete zone-level code or outputs.
-4. Implement Phase 3 exactly to the acceptance checklist.
-5. Run the generator and tests; then request validation before proceeding to Phase 4.
+1. Read this document and [REPOSITORY_WALKTHROUGH.md](REPOSITORY_WALKTHROUGH.md).
+2. Read [DATA_CONTRACT.md](DATA_CONTRACT.md) and [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
+3. Review the implementation under `src/`, the regression tests under `tests/`, and the presentation notebooks under `notebooks/`.
+4. Use [FINAL_REPORT.md](FINAL_REPORT.md) or [FINAL_REPORT.html](FINAL_REPORT.html) for the validated project narrative and results.
+5. Treat the synthetic-data limitation and the unresolved real-data questions as mandatory context for any future extension.
